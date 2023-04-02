@@ -4,7 +4,6 @@ import Footer from '../about/footer/footer';
 import Reviews from './revirews/review';
 import Slider from './slider/slider';
 import './homepage.css';
-import collegeimge from '../images/aicte.jpg'
 export class homepage extends Component {
   static propTypes = {}
 

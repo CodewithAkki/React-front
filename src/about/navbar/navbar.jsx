@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './navbar.css'
 import Aicte from '../../images/AICTE-Logo-250x250-1.webp'
-import { Outlet, Link } from "react-router-dom";
+import {  Link } from "react-router-dom";
 export class navbar extends Component {
   render() {
     return (

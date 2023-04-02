@@ -23,7 +23,7 @@ export class review extends Component {
               <div className="card">
                 <div className="card-body py-4 mt-2">
                   <div className="d-flex justify-content-center mb-4">
-                    <img src={Hackathon} className="rounded-circle shadow-1-strong" width={100} height={100} />
+                    <img src={Hackathon} alt='Hackathon' className="rounded-circle shadow-1-strong" width={100} height={100} />
                   </div>
                   <h5 className="font-weight-bold">Teresa May</h5>
                   <h6 className="font-weight-bold my-3">Founder at ET Company</h6>
@@ -56,7 +56,7 @@ export class review extends Component {
               <div className="card">
                 <div className="card-body py-4 mt-2">
                   <div className="d-flex justify-content-center mb-4">
-                    <img src={Hackathon} className="rounded-circle shadow-1-strong" width={100} height={100} />
+                    <img src={Hackathon} alt='Hackathon' className="rounded-circle shadow-1-strong" width={100} height={100} />
                   </div>
                   <h5 className="font-weight-bold">Maggie McLoan</h5>
                   <h6 className="font-weight-bold my-3">Photographer at Studio LA</h6>
@@ -89,7 +89,7 @@ export class review extends Component {
               <div className="card">
                 <div className="card-body py-4 mt-2">
                   <div className="d-flex justify-content-center mb-4">
-                    <img src={Hackathon} className="rounded-circle shadow-1-strong" width={100} height={100} />
+                    <img src={Hackathon} alt='Hackathon' className="rounded-circle shadow-1-strong" width={100} height={100} />
                   </div>
                   <h5 className="font-weight-bold">Alexa Horwitz</h5>
                   <h6 className="font-weight-bold my-3">Front-end Developer in NY</h6>

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
 import "./signup.css";
-import { Outlet, Link } from "react-router-dom";
+
 import { useNavigate } from "react-router-dom";
 function Support() {
   const url = "http://127.0.0.1:8000/users/";
