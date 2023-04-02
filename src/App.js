@@ -5,6 +5,7 @@ import Login from './login/login'
 import Project from './project/project'
 import Registration from './signup/signup'
 import About from './about/about';
+import Event from './event/Event';
 function App() {
 
 
@@ -17,6 +18,8 @@ function App() {
     <Route path="/project" element={<Project/>} />
     <Route path="/registration" element={<Registration/>} />
     <Route path="/about" element={<About/>} />
+    <Route path="/event" element={<Event/>} />
+
      
       </Routes>
     </BrowserRouter>
