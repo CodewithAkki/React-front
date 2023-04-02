@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './navbar.css'
 import Aicte from '../../images/AICTE-Logo-250x250-1.webp'
+import { Outlet, Link } from "react-router-dom";
 export class navbar extends Component {
   render() {
     return (
@@ -8,33 +9,31 @@ export class navbar extends Component {
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"><img src={Aicte} alt="" className='imageaicte'/></a>
+    <Link class="navbar-brand" to="#"><img src={Aicte} alt="aicte" className='imageaicte'/></Link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="#">Home</a>
+          <Link class="nav-link" aria-current="page" to="#">Home</Link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
+          <Link class="nav-link" to="/login">Login</Link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/project">Project</a>
+          <Link class="nav-link" to="/project">Project</Link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/approval">Approval</a>
+          <Link class="nav-link" to="/approval">Approval</Link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/event">Events</a>
+          <Link class="nav-link" to="/event">Events</Link>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="/about">About</a>
+          <Link class="nav-link active" to="/about">About</Link>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/contact">contact</a>
-        </li>
+     
       </ul>
     </div>
   </div>

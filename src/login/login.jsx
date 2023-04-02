@@ -3,8 +3,9 @@ import './login.css'
 import Navbar from './navbar/navbar'
 import swal from 'sweetalert';
 import axios from 'axios';
-import Main from './main/main';
-import slideimage from '../images/ai.gif'
+import { Outlet, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
   const url="http://127.0.0.1:8000/login/";
   const [data,setData]=useState(
@@ -13,6 +14,7 @@ function Login() {
       "password": "",
     
     })
+const navigate = useNavigate();
     function handle(e){
       const newdata={...data}
       newdata[e.target.id]=e.target.value
@@ -23,21 +25,23 @@ function Login() {
       e.preventDefault();
       axios.post(url,
         {
-          "email": data.email,
-          "password": data.password
+          username: data.email,
+          password: data.password
         
-        }
-          ).then(
+        }).then(
         res=>{
           if (res.data.message === "login successfully"){
+               console.log("santosh!");
             swal({
               title: "Good job!",
               text: "you are registered successfully!",
               icon: "success",
               button: "ok",
             });
+              navigate("/");
+
           }
-          else if (res.data.message === "fail to login"){{
+          else if (res.data.message === "fail to login"){
             swal({
               title: "try again",
               text: "fail to register",
@@ -47,12 +51,11 @@ function Login() {
           }
          
            } 
-        }
     )
-  }
+          }
 
   return (
-    <div>
+    <div className="login-main">
 
             <Navbar/>
            
@@ -64,7 +67,7 @@ function Login() {
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" className="img-fluid" alt="Sample image" />
             </div>
             <div className="col-md-7 col-lg-6 col-xl-4 offset-xl-1 ">
-              <form>
+              <form onSubmit={(e)=>submit(e)}>
                 <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start mt-20">
                 
                   <button type="button" className="btn btn-primary btn-circle mx-1">
@@ -82,12 +85,10 @@ function Login() {
                 {/* Email input */}
                 <div className="form-outline mb-4">
                   <input type="email" onChange={(e)=>handle(e)} id="email" value={data.email} className="form-control form-control-lg" placeholder="Enter a valid email address" />
-                  <label className="form-label" htmlFor="email">Email address</label>
                 </div>
                 {/* Password input */}
                 <div className="form-outline mb-3">
                   <input type="password" onChange={(e)=>handle(e)} id="password" value={data.password} className="form-control form-control-lg" placeholder="Enter password" />
-                  <label className="form-label" htmlFor="password">Password</label>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Checkbox */}
@@ -97,38 +98,15 @@ function Login() {
                       Remember me
                     </label>  
                   </div>
-                  <a href="#!" className="text-body">Forgot password?</a>
+                  <Link to="#!" className="text-body">Forgot password?</Link>
                 </div>
                 <div className="text-center text-lg-start mt-4 pt-2">
-                  <button type="button" className="btn btn-primary btn-lg" style={{paddingLeft: '2.5rem', paddingRight: '2.5rem',marginTop:'30px'}}>Login</button>
-                  <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/registration" className="link-danger">Register</a></p>
+                  <button type="submit" className="btn btn-primary btn-lg" style={{paddingLeft: '2.5rem', paddingRight: '2.5rem',marginTop:'30px'}}>Login</button>
+                  <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <Link to="/registration" className="link-danger">Register</Link></p>
                 </div>
               </form>
             </div>
           </div>
-        </div>
-        <div className="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-          {/* Copyright */}
-          <div className="text-white mb-3 mb-md-0">
-            Copyright © 2020. All rights reserved.
-          </div>
-          {/* Copyright */}
-          {/* Right */}
-          <div>
-            <a href="#!" className="text-white me-4">
-              <i className="fab fa-facebook-f" />
-            </a>
-            <a href="#!" className="text-white me-4">
-              <i className="fab fa-twitter" />
-            </a>
-            <a href="#!" className="text-white me-4">
-              <i className="fab fa-google" />
-            </a>
-            <a href="#!" className="text-white">
-              <i className="fab fa-linkedin-in" />
-            </a>
-          </div>
-          {/* Right */}
         </div>
       </section>
       

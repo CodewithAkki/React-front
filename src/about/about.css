@@ -1,0 +1,52 @@
+.para1{
+    position: relative;
+    font-size: 1em;
+    text-align: center;
+    width: 100%;
+
+}
+
+.back-para1{
+
+    width: 100%;
+    margin-top: 100px;
+}
+.adjust{
+    width: 70%;
+    margin-left:200px ;
+    margin-top: 100px;
+    
+}
+.sideimg{
+    display: flex;
+    margin-top: 100px;
+    justify-content: center;
+}
+.about-content{
+    width: 45%;
+    margin-left: -104px;
+}
+.imageside{
+    width: 70%;
+    height: 90%;
+    margin-top: 30px;
+}
+.content-2{
+    margin-top: 100px;
+}
+.imgcontent{
+    width: 60%;
+}
+.history-content{
+   display: flex;
+    margin-top: 100px;
+}
+.history-content1{
+    width: 50%;
+    margin-left: 150px;
+
+}
+.history-content2{
+    width: 20%;
+    margin-left: 100px;
+}

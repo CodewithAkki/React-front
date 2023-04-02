@@ -9,3 +9,15 @@
     border-radius: 200px;
   
 }
+.login-main{
+    overflow: none;
+}
+.justify-content-center {
+    justify-content: center!important;
+    margin-bottom: 30px;
+    margin-top: 50px;
+}
+.fw-bold {
+    font-weight: 700!important;
+    margin-left: 20%;
+}
