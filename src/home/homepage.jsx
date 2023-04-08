@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from './navbar/navbar';
+import NavbarComp from '../components/NavbarComp';
 import Footer from '../about/footer/footer';
 import Reviews from './revirews/review';
 import Slider from './slider/slider';
@@ -17,7 +18,7 @@ export class homepage extends Component {
         </div>
      =
       <div className='navBar'>
-            <Navbar/>
+            <NavbarComp/>
             </div>
             <div className='slider'>
             <Slider/>

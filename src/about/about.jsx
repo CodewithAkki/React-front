@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from './navbar/navbar';
+import NavbarComp from '../components/NavbarComp';
 import './about.css';
 import Footer from './footer/footer';
 import Logo from '../images/AICTE-Logo-250x250-1.webp'
@@ -8,7 +9,7 @@ export class about extends Component {
   render() {
     return (
       <div>
-            <Navbar/>
+            <NavbarComp/>
         <div className="adjust">
           <center><img src={Logo} alt=''/></center>
           <div>

@@ -3,8 +3,12 @@ import './login.css'
 import Navbar from './navbar/navbar'
 import swal from 'sweetalert';
 import axios from 'axios';
+import NavbarComp from '../components/NavbarComp';
+
 import {  Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import { UserContext } from '../App';
 
 function Login() {
   const url="http://127.0.0.1:8000/login/";
@@ -32,9 +36,10 @@ const navigate = useNavigate();
         res=>{
           if (res.data.message === "login successfully"){
                console.log("santosh!");
+               dispatch({type:"USER",payload:true})
             swal({
               title: "Good job!",
-              text: "you are registered successfully!",
+              text: "you are Login successfully!",
               icon: "success",
               button: "ok",
             });
@@ -53,11 +58,12 @@ const navigate = useNavigate();
            } 
     )
           }
+     const {state,dispatch}=useContext(UserContext);
 
   return (
     <div className="login-main">
 
-            <Navbar/>
+            <NavbarComp/>
            
             
             <section className="vh-100">

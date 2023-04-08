@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./navbar/navbar";
+import NavbarComp from '../components/NavbarComp';
 import { Outlet, Link } from "react-router-dom";
 import AI from "./ai.gif";
 
@@ -19,7 +20,7 @@ const Event = () => {
   return (
     <>
       <div>
-        <Navbar />{" "}
+        <NavbarComp />{" "}
       </div>
       <div className="row">
         {user &&
