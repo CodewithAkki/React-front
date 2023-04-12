@@ -35,7 +35,9 @@ const navigate = useNavigate();
         }).then(
         res=>{
           if (res.data.message === "login successfully"){
-               console.log("santosh!");
+              // console.log("santosh!");
+          
+
                dispatch({type:"USER",payload:true})
             swal({
               title: "Good job!",
@@ -44,7 +46,8 @@ const navigate = useNavigate();
               button: "ok",
             });
               navigate("/");
-
+            localStorage.setItem("email",res.data.email);
+            localStorage.setItem("userId",res.data.userId);
           }
           else if (res.data.message === "fail to login"){
             swal({

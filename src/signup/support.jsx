@@ -154,7 +154,7 @@ const navigate = useNavigate();
                          {/* Select */}
                          <div className="form-ouline mb-4">
                           <select
-                            class="form-select"
+                            className="form-select"
                             aria-label="Default select example"
                             onChange={(e) => handle(e)}
                             id="option"
