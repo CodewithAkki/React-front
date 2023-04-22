@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Navbar from "../about/navbar/navbar";
 import { storage } from "../firebase";
 import NavbarComp from "../components/NavbarComp";
@@ -8,14 +8,16 @@ import axios from "axios";
 function Project() {
   const picurl = "";
   const [progress, setProgress] = useState(0);
+  const [patentInfo,setPatentInfo]=useState(false);
   const url = "http://127.0.0.1:8000/project/";
   const [data, setData] = useState({
-    pricePerUnit: "",
-    availableQuantity: "",
     projectName: "",
     description: "",
-    picture: "",
-    endDate:"",
+    endDate: "",
+    domain:"",
+    type:"",
+    patent:"true",
+    Patent_Info:"",
   });
 
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
@@ -46,6 +48,7 @@ function Project() {
     const newdata = { ...data };
     newdata[e.target.id] = e.target.value;
     setData(newdata);
+    setPatentInfo(true);
     console.log("santosh", newdata);
   }
 
@@ -54,37 +57,38 @@ function Project() {
     axios
       .post(url, {
         name: data.projectName,
-        pricePerUnit: data.pricePerUnit,
-        availableQuantity: data.availableQuantity,
-        projectName: data.projectName,
+        end_date: data.endDate,
+        type:data.type,
         description: data.description,
-        picture: data.pic,
-        end_date:data.endDate
+        domain:data.domain,
+        is_patent:data.patent,
+        patent_info:data.Patent_Info,    
       })
       .then((res) => {
-        if (res.data.message === "project created") {
           swal({
             title: "Good job!",
             text: "you created project successfully!",
             icon: "success",
             button: "ok",
           });
-        } else if (res.data.message === "project fail to create") {
-          {
-            swal({
-              title: "try again",
-              text: "fail to created project",
-              icon: "error",
-              button: "ok",
-            });
-          }
-        }
+      
       });
   }
   const handleShow = () => {
     setShow(true);
   };
   const [show, setShow] = useState(false);
+  const [user, setUser] = useState([]);
+
+  const fetchData = () => {
+    return fetch("http://localhost:8000/project/Domain/")
+      .then((response) => response.json())
+      .then((data) => setUser(data));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div>
       <NavbarComp />
@@ -118,17 +122,17 @@ function Project() {
           </div>
           <div className="col-sm-10">
             <button
-            style={{
-              width:"10%",
-              float:"right",
-              position:"relative",
-              marginTop:"0px",
-            }}
+              style={{
+                width: "10%",
+                float: "right",
+                position: "relative",
+                marginTop: "0px",
+              }}
               type="submit"
               className="btn btn-primary btn-sm"
               onClick={handleShow}
             >
-           + &nbsp; &nbsp;New Project
+              + &nbsp; &nbsp;New Project
             </button>
             <div className="back">
               {/* <firebase /> */}
@@ -143,31 +147,28 @@ function Project() {
                           onChange={(e) => handle(e)}
                           id="projectName"
                           value={data.projectName}
-                          placeholder="projectName"
-                          className="form-control form-control-lg"
-                        />
-                      </div>
-
-                      <div className="form-outline mb-4">
-                        <input
-                          type="text"
-                          onChange={(e) => handle(e)}
-                          id="availableQuantity"
-                          value={data.availableQuantity}
-                          placeholder="availableQuantity"
+                          placeholder="Project Name"
                           className="form-control form-control-lg"
                         />
                       </div>
                       <div className="form-outline mb-4">
                         <input
+                          type="checkbox"
+                          onChange={(e) => handle(e)}
+                          id="patent"
+                          value={data.patent}
+                        /> is Patent
+                      </div>
+                    { patentInfo &&<div className="form-outline mb-4">
+                        <input
                           type="text"
                           onChange={(e) => handle(e)}
-                          id="pricePerUnit"
-                          value={data.pricePerUnit}
-                          placeholder="pricePerUnit"
+                          id="Patent_Info"
+                          value={data.Patent_Info}
+                          placeholder="Patent Info"
                           className="form-control form-control-lg"
                         />
-                      </div>
+                      </div>}
                       <div className="form-outline mb-4">
                         <input
                           type="text"
@@ -186,6 +187,32 @@ function Project() {
                           value={data.endDate}
                           className="form-control form-control-lg"
                         />
+                      </div>
+                      <div className="form-outline mb-4">
+                        <select 
+                        value={data.domain} 
+                        className="form-control form-control-lg" 
+                        onChange={(e)=>handle(e)} 
+                        id="domain">
+                          <option selected>Select option</option>
+                          {user && user.map((data)=>
+                            <option value={data.id}>{data.name}</option>)}
+                        </select>
+                      </div>
+                      <div className="form-outline mb-4">
+                        <input
+                          type="radio"
+                          onChange={(e) => handle(e)}
+                          id="type"
+                          value="Public"
+                        /> Public
+                      <input
+                          type="radio"
+                          style={{marginLeft:"10px"}}
+                          onChange={(e) => handle(e)}
+                          id="type"
+                          value="Private"
+                        /> Private
                       </div>
                       <div className="form-outline mb-4">
                         <input
