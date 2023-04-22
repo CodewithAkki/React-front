@@ -1,10 +1,13 @@
 import React, { useState ,useEffect} from "react";
 import Navbar from "../about/navbar/navbar";
-import { storage } from "../firebase";
 import NavbarComp from "../components/NavbarComp";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import swal from "sweetalert";
 import axios from "axios";
+import {storage} from '../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+
+import uuid from 'react-uuid';
+
 function Project() {
   const picurl = "";
   const [progress, setProgress] = useState(0);
@@ -19,29 +22,31 @@ function Project() {
     patent:"true",
     Patent_Info:"",
   });
+  const [imageUpload,setImageUpload]=useState(null)
+  const [imgUrl, setImgUrl] = useState(null);
+  const [progresspercent, setProgresspercent] = useState(0);
 
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
   const uploadfile = (files) => {
-    debugger;
-    if (!files) return;
-    const storageref = ref(Storage, `/files/${files.name}`);
-    const uploadTask = uploadBytesResumable(storageref, files);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const prog = Math.round(
-          [snapshot.bytesTransferred / snapshot.totalBytes] * 100
-        );
-        alert(progress);
-        setProgress(prog);
-      },
-      (error) => {
-        alert(error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => (data.pic = url));
-      }
-    );
+    if (imageUpload==null) return;
+    const imageRef = ref(storage,`images/${imageUpload.name+uuid()}`);
+    const uploadTask = uploadBytesResumable(imageRef, imageUpload);
+    uploadTask.on("state_changed",
+    (snapshot) => {
+      const progress =
+        Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      setProgresspercent(progress);
+    },
+    (error) => {
+      alert(error);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        setImgUrl(downloadURL);
+        
+      });
+    }
+  );
   };
 
   function handle(e) {
@@ -60,6 +65,7 @@ function Project() {
         end_date: data.endDate,
         type:data.type,
         description: data.description,
+        Storage_link:imgUrl,
         domain:data.domain,
         is_patent:data.patent,
         patent_info:data.Patent_Info,    
@@ -221,13 +227,12 @@ function Project() {
                           placeholder="projectName"
                           className="form-control form-control-lg"
                           onChange={(event) => {
-                            uploadfile(event.target.files[0]);
+                            setImageUpload(event.target.files[0]);
                           }}
                         />
                       </div>
-                      <button type="submit" className="btn btn-primary">
-                        {" "}
-                        Click and Upload
+                      <button type="submit" className="btn btn-primary" onClick={ uploadfile}>
+                      
                       </button>
                     </div>
                   </form>
