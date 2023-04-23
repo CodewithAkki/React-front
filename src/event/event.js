@@ -22,7 +22,7 @@ const Event = () => {
       <div>
         <NavbarComp />{" "}
       </div>
-      <div className="row">
+      <div className="row" style={{marginRight:"0px"}}>
         {user &&
           user.length > 0 &&
           user.map((userData, index) => (

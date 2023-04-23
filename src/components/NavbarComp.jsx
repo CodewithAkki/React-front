@@ -3,15 +3,18 @@ import './navbar.css'
 import Aicte from '../images/AICTE-Logo-250x250-1.webp'
 import {  Link } from "react-router-dom";
 import { UserContext } from '../App';
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar=()=> {
-    const {state,dispatch}=useContext(UserContext);
-        const handleLogout=()=>{
-            localStorage.removeItem("email");
-            localStorage.removeItem("userId");
-            window.location.href="/";
 
+    const {state,dispatch}=useContext(UserContext);
+const navigates = useNavigate();
+        const handleLogout=()=>{
+            localStorage.clear();
+            navigates("/login");
         }
+        console.log("state",state);
     const RenderMenu=()=>{
          if(state){
             return (
