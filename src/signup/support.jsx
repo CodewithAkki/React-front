@@ -13,11 +13,7 @@ function Support() {
     college:"",
     contact_no: "",
     password: "",
-    is_AICTEmember:"false",
-    is_dean:"false",
-    is_guid:"true",
-    is_hod:"false",
-    is_teacher:"false",
+    role:""
   });
 const navigate = useNavigate();
   function handle(e) {
@@ -26,6 +22,14 @@ const navigate = useNavigate();
     setData(newdata);
     console.log(newdata);
   }
+
+  const [value, setValue] = useState();
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    console.log(value);
+  };
+
   function submit(e) {
     e.preventDefault();
     axios
@@ -35,11 +39,7 @@ const navigate = useNavigate();
         last_name: data.last_name,
         password: data.password,
         contact_no: data.contact_no,
-        is_AICTEmember:data.is_AICTEmember,
-        is_dean:data.is_dean,
-        is_guid:data.is_guid,
-        is_hod:data.is_hod,
-        is_teacher:data.is_teacher,
+        role: value
       })
       .then((res) => {
         if (res.data.message === "user registered sccessfully") {
@@ -165,34 +165,21 @@ const navigate = useNavigate();
                           <select
                             className="form-select"
                             aria-label="Default select example"
-                            onChange={(e) => handle(e)}
+                            onChange={handleChange}
                             id="option"
                             value={data.option}
                           >
-                            {/* <option selected>Select option</option>
-                            <option value="true">Student</option>
-                            <option value="true">Guide</option>
-                            <option value="true">HOD</option>
-                            <option value="true">Dean</option>
-                            <option value="true">AICTE</option> */}
+                             <option selected>Select option</option>
+                            <option value="6">Student</option>
+                            <option value="2">Guide</option>
+                            <option value="3">HOD</option>
+                            <option value='4'>Dean</option>
+                            <option value='5'>AICTE</option> 
+                            <option value='1'>Teacher</option> 
                           </select>
                         </div>
                         {/* Checkbox */}
-                        <div className="form-check d-flex justify-content-center mb-4">
-                          <input
-                            className="form-check-input me-2"
-                            type="checkbox"
-                            defaultValue
-                            id="form2Example33"
-                            defaultChecked
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="form2Example33"
-                          >
-                            Subscribe to our newsletter
-                          </label>
-                        </div>
+
                        
                         {/* Submit button */}
                         <button

@@ -5,7 +5,7 @@ import Login from './login/login'
 import Project from './project/project'
 import Registration from './signup/signup'
 import About from './about/about';
-import Event from './event/Event';
+import Event from './event/event';
 import Approval from './approval/approval';
 import { createContext, useReducer } from 'react';
 import {reducer,initialState} from '../src/UseReducer';

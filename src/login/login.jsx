@@ -48,6 +48,7 @@ const navigate = useNavigate();
               navigate("/");
             localStorage.setItem("email",res.data.email);
             localStorage.setItem("userId",res.data.userId);
+            localStorage.setItem("role",res.data.role);
           }
           else if (res.data.message === "fail to login"){
             swal({
