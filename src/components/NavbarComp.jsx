@@ -6,13 +6,12 @@ import { UserContext } from '../App';
 import { useNavigate } from "react-router-dom";
 
 
-const Navbar=()=> {
-
+const Navbar=(props)=> {
+     const user=localStorage.getItem("email");
     const {state,dispatch}=useContext(UserContext);
-const navigates = useNavigate();
         const handleLogout=()=>{
             localStorage.clear();
-            navigates("/login");
+            window.location.href="/"
         }
         console.log("state",state);
     const RenderMenu=()=>{
@@ -36,6 +35,9 @@ const navigates = useNavigate();
         </li>
         <li className="nav-item">
           <Link className="nav-link" onClick={handleLogout}>Logout</Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link">Hi {user}</Link>
         </li>
 
                 </>

@@ -66,7 +66,7 @@ const navigate = useNavigate();
   return (
     <div className="login-main">
 
-            <NavbarComp/>
+            <NavbarComp   data={false}/>
            
             
             <section className="vh-100">

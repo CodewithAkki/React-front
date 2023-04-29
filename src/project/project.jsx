@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../about/navbar/navbar";
+
 import NavbarComp from "../components/NavbarComp";
 import swal from "sweetalert";
 import axios from "axios";
@@ -16,10 +16,9 @@ function Project() {
   const [patentInfo, setPatentInfo] = useState(false);
   const [projectcard, setProjectCard] = useState(true);
   const [newBtnShow, setnewBtnShow] = useState(true);
-  const [newBtnShow1, setnewBtnShow1] = useState(false);
-  const [imageUpload, setImageUpload] = useState(nullc);
-  const [imgUrl, setImgUrl] = useState();
-  const [progresspercent, setProgresspercent] = useState(0);
+  const [newBtnShow1,setnewBtnShow1] = useState(false)
+  
+  const [Storage_link, imageurl] = useState();
 
   const url = "http://127.0.0.1:8000/project/";
   const [data, setData] = useState({
@@ -30,16 +29,17 @@ function Project() {
     type: "",
     patent: "true",
     Patent_Info: "",
-    imageUpload:imgUrl,
+    Storage_link: "",
   });
 
- console.log("imgurl",imgUrl)
- console.log("imageUpload",imageUpload)
-
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imgUrl, setImgUrl] = useState(null);
+  const [progresspercent, setProgresspercent] = useState(0);
+  let imgUrl_ ;
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
   const uploadfile = (files) => {
     if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${imageUpload.name + uuid()}`);
+    const imageRef = ref(storage, `images/${imageUpload.name}`);
     const uploadTask = uploadBytesResumable(imageRef, imageUpload);
     uploadTask.on(
       "state_changed",
@@ -47,17 +47,28 @@ function Project() {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
+        
         setProgresspercent(progress);
+
       },
       (error) => {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setImgUrl(downloadURL);
+        getDownloadURL(imageRef).then((downloadURL) => {
+          setData({...data,Storage_link:downloadURL});
+          
+          submit(downloadURL);
+
         });
       }
     );
+   
+
+
+
+
+
   };
 
   function handle(e) {
@@ -68,30 +79,7 @@ function Project() {
     console.log("santosh", newdata);
   }
 
-  function submit(e) {
-    e.preventDefault();
-    axios
-      .post(url, {
-        name: data.projectName,
-        end_date: data.endDate,
-        type: data.type,
-        description: data.description,
-        Storage_link: data.imageUpload,
-        domain: data.domain,
-        is_patent: data.patent,
-        patent_info: data.Patent_Info,
-      })
-      .then((res) => {
-        setShow(false);
-        setProjectCard(true);
-        swal({
-          title: "Good job!",
-          text: "you created project successfully!",
-          icon: "success",
-          button: "ok",
-        });
-      });
-  }
+
   const handleShow = () => {
     setShow(true);
     setProjectCard(false);
@@ -102,8 +90,7 @@ function Project() {
     setProjectCard(true);
     setnewBtnShow(true);
     setnewBtnShow1(false);
-    setShow(false)
-
+    setShow(false);
   };
   const [show, setShow] = useState(false);
   const [user, setUser] = useState([]);
@@ -117,7 +104,34 @@ function Project() {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(data);
+  function submit (downloadURL){
+    alert(downloadURL);
+    axios
+    .post(url, {
+      name: data.projectName,
+      end_date: data.endDate,
+      type: data.type,
+      description: data.description,
+      Storage_link:downloadURL,
+      domain: data.domain,
+      is_patent: data.patent,
+      patent_info: data.Patent_Info,
+    }).then((res) => {
+      setShow(false);
+      setProjectCard(true);
+    
+      swal({
+        title: "Good job!",
+        text: "you created project successfully!",
+        icon: "success",
+        button: "ok",
+      });
+
+    })
+  }
   return (
+    
     <div>
       <NavbarComp />
       <div className="container-fluid mt-3">
@@ -182,7 +196,7 @@ function Project() {
               {show && (
                 <div className="container" style={{ width: "50%" }}>
                   <h3 className="mb-5">Project</h3>
-                  <form onSubmit={(e) => submit(e)}>
+                  <form>
                     <div className="middel_section">
                       <div className="form-outline mb-4">
                         <input
@@ -268,7 +282,7 @@ function Project() {
                       <div className="form-outline mb-4">
                         <input
                           type="file"
-                          id="imageUpload"
+                          id="projectName"
                           placeholder="projectName"
                           className="form-control form-control-lg"
                           onChange={(event) => {
@@ -277,9 +291,9 @@ function Project() {
                         />
                       </div>
                       <button
-                        type="submit"
+                        type="button"
                         className="btn btn-primary mb-3"
-                        onClick={submit}
+                        onClick={uploadfile}
                       >
                         Submit
                       </button>

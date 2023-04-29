@@ -6,6 +6,7 @@ import Project from './project/project'
 import Registration from './signup/signup'
 import About from './about/about';
 import Event from './event/Event';
+import Approval from './approval/approval';
 import { createContext, useReducer } from 'react';
 import {reducer,initialState} from '../src/UseReducer';
 export const UserContext= createContext();  
@@ -18,6 +19,7 @@ const Rounting =()=>{
   <Route path="/project" element={<Project/>} />
   <Route path="/registration" element={<Registration/>} />
   <Route path="/about" element={<About/>} />
+  <Route path="/approval" element={<Approval/>} />
   <Route path="/event" element={<Event/>} />
 
    

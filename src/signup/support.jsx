@@ -13,7 +13,11 @@ function Support() {
     college:"",
     contact_no: "",
     password: "",
-    option:"",
+    is_AICTEmember:"false",
+    is_dean:"false",
+    is_guid:"true",
+    is_hod:"false",
+    is_teacher:"false",
   });
 const navigate = useNavigate();
   function handle(e) {
@@ -31,6 +35,11 @@ const navigate = useNavigate();
         last_name: data.last_name,
         password: data.password,
         contact_no: data.contact_no,
+        is_AICTEmember:data.is_AICTEmember,
+        is_dean:data.is_dean,
+        is_guid:data.is_guid,
+        is_hod:data.is_hod,
+        is_teacher:data.is_teacher,
       })
       .then((res) => {
         if (res.data.message === "user registered sccessfully") {
@@ -160,12 +169,12 @@ const navigate = useNavigate();
                             id="option"
                             value={data.option}
                           >
-                            <option selected>Select option</option>
-                            <option value="Student">Student</option>
-                            <option value="Guide">Guide</option>
-                            <option value="Guide">HOD</option>
-                            <option value="Dean">Dean</option>
-                            <option value="AICTE">AICTE</option>
+                            {/* <option selected>Select option</option>
+                            <option value="true">Student</option>
+                            <option value="true">Guide</option>
+                            <option value="true">HOD</option>
+                            <option value="true">Dean</option>
+                            <option value="true">AICTE</option> */}
                           </select>
                         </div>
                         {/* Checkbox */}
