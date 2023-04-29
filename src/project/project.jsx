@@ -17,7 +17,9 @@ function Project() {
   const [projectcard, setProjectCard] = useState(true);
   const [newBtnShow, setnewBtnShow] = useState(true);
   const [newBtnShow1, setnewBtnShow1] = useState(false);
-
+  const [imageUpload, setImageUpload] = useState(nullc);
+  const [imgUrl, setImgUrl] = useState();
+  const [progresspercent, setProgresspercent] = useState(0);
 
   const url = "http://127.0.0.1:8000/project/";
   const [data, setData] = useState({
@@ -28,10 +30,11 @@ function Project() {
     type: "",
     patent: "true",
     Patent_Info: "",
+    imageUpload:imgUrl,
   });
-  const [imageUpload, setImageUpload] = useState(null);
-  const [imgUrl, setImgUrl] = useState(null);
-  const [progresspercent, setProgresspercent] = useState(0);
+
+ console.log("imgurl",imgUrl)
+ console.log("imageUpload",imageUpload)
 
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
   const uploadfile = (files) => {
@@ -73,7 +76,7 @@ function Project() {
         end_date: data.endDate,
         type: data.type,
         description: data.description,
-        Storage_link: imgUrl,
+        Storage_link: data.imageUpload,
         domain: data.domain,
         is_patent: data.patent,
         patent_info: data.Patent_Info,
@@ -265,7 +268,7 @@ function Project() {
                       <div className="form-outline mb-4">
                         <input
                           type="file"
-                          id="projectName"
+                          id="imageUpload"
                           placeholder="projectName"
                           className="form-control form-control-lg"
                           onChange={(event) => {
@@ -276,7 +279,7 @@ function Project() {
                       <button
                         type="submit"
                         className="btn btn-primary mb-3"
-                        onClick={uploadfile}
+                        onClick={submit}
                       >
                         Submit
                       </button>
