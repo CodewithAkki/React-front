@@ -38,10 +38,13 @@ const navigate = useNavigate();
         first_name: data.first_name,
         last_name: data.last_name,
         password: data.password,
-        contact_no: data.contact_no,
+        college:data.college,
+        department:data.department,
+        phone_no: data.contact_no,
         role: value
       })
       .then((res) => {
+        console.log(res.status);
         if (res.data.message === "user registered sccessfully") {
           console.log("santosh");
           swal({
@@ -50,7 +53,7 @@ const navigate = useNavigate();
             icon: "success",
             button: "ok",
           });
-            navigate("/login");
+          navigate("/login");
         }
         if (res.data.message === "fail to register") {
           swal({
@@ -170,11 +173,11 @@ const navigate = useNavigate();
                             value={data.option}
                           >
                              <option selected>Select option</option>
-                            <option value="6">Student</option>
-                            <option value="2">Guide</option>
-                            <option value="3">HOD</option>
+                            <option value="2">Student</option>
+                            <option value="6">Guide</option>
+                            <option value="5">HOD</option>
                             <option value='4'>Dean</option>
-                            <option value='5'>AICTE</option> 
+                            <option value='3'>AICTE</option> 
                             <option value='1'>Teacher</option> 
                           </select>
                         </div>

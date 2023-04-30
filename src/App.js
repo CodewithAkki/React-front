@@ -4,6 +4,7 @@ import Home from './home/homepage';
 import Login from './login/login'
 import Project from './project/project'
 import Registration from './signup/signup'
+import Admin from './admin/admin'
 import About from './about/about';
 import Event from './event/event';
 import Approval from './approval/approval';
@@ -21,6 +22,7 @@ const Rounting =()=>{
   <Route path="/about" element={<About/>} />
   <Route path="/approval" element={<Approval/>} />
   <Route path="/event" element={<Event/>} />
+  <Route path="/admin" element={<Admin/>} />
 
    
     </Routes>

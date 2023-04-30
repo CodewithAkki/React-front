@@ -26,7 +26,9 @@ const navigate = useNavigate();
       console.log(newdata)
     }
     function submit(e){
+
       e.preventDefault();
+if (data.email != "admin@gmail.com" && data.password!="admin") {
       axios.post(url,
         {
           username: data.email,
@@ -46,9 +48,14 @@ const navigate = useNavigate();
               button: "ok",
             });
               navigate("/");
+            console.log(res.data.picture);
             localStorage.setItem("email",res.data.email);
             localStorage.setItem("userId",res.data.userId);
             localStorage.setItem("role",res.data.role);
+            localStorage.setItem("picture",res.data.picture);
+            localStorage.setItem("first_name",res.data.first_name);
+            localStorage.setItem("last_name",res.data.last_name);
+            localStorage.setItem("college",res.data.college);
           }
           else if (res.data.message === "fail to login"){
             swal({
@@ -61,6 +68,9 @@ const navigate = useNavigate();
          
            } 
     )
+          }else {
+            navigate("/admin");
+          }
           }
      const {state,dispatch}=useContext(UserContext);
 

@@ -21,6 +21,7 @@ function Project() {
   const [Storage_link, imageurl] = useState();
 
   const url = "http://127.0.0.1:8000/project/";
+  
   const [data, setData] = useState({
     projectName: "",
     description: "",
@@ -30,6 +31,7 @@ function Project() {
     patent: "true",
     Patent_Info: "",
     Storage_link: "",
+    user:""
   });
 
   const [imageUpload, setImageUpload] = useState(null);
@@ -107,6 +109,7 @@ function Project() {
   console.log(data);
   function submit (downloadURL){
     alert(downloadURL);
+    const userId=localStorage.getItem("userId");
     axios
     .post(url, {
       name: data.projectName,
@@ -117,9 +120,9 @@ function Project() {
       domain: data.domain,
       is_patent: data.patent,
       patent_info: data.Patent_Info,
+      user:userId
     }).then((res) => {
-      setShow(false);
-      setProjectCard(true);
+
     
       swal({
         title: "Good job!",
@@ -130,6 +133,12 @@ function Project() {
 
     })
   }
+          const email= localStorage.getItem("email");
+          const role=localStorage.getItem("role");
+          const first_name= localStorage.getItem("first_name");
+          const last_name= localStorage.getItem("last_name");
+          const college= localStorage.getItem("college");
+          const picture = localStorage.getItem("picture");
   return (
     
     <div>
@@ -140,14 +149,16 @@ function Project() {
             <div className="card mb-4">
               <div className="card-body text-center">
                 <img
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                  src={picture}
                   alt="avatar"
                   className="rounded-circle img-fluid"
-                  style={{ width: "150px" }}
+                  style={{ width: "250px" }}
                 />
-                <h5 className="my-3">John Smith</h5>
-                <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+
+                <h5 className="my-3">{first_name+" "+last_name}</h5>
+                <p className="text-muted mb-1">{role}</p>
+                <p className="text-muted mb-4">{college}</p>
+                <p className="text-muted mb-4">{email}</p>
                 <div className="d-flex justify-content-center mb-2">
                   <button type="button" className="btn btn-primary">
                     Follow

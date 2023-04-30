@@ -1,0 +1,17 @@
+#split-button-dropdown{
+    width: 20%;
+    margin-top: 10px;
+}
+.btnsubmit{
+    width: 20%;
+    margin-left: 20%;
+    margin-top: 50px;
+    border-radius: 10px;
+    border: none;
+    height: 50px;
+}
+.title{
+    
+    margin-left: 250px;
+    margin-top: 20px;
+}
