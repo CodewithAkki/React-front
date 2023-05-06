@@ -6,16 +6,25 @@ import { UserContext } from '../App';
 import { useNavigate } from "react-router-dom";
 
 
+
 const Navbar=(props)=> {
-     const user=localStorage.getItem("email");
+    const user=localStorage.getItem("email");
     const {state,dispatch}=useContext(UserContext);
         const handleLogout=()=>{
             localStorage.clear();
             window.location.href="/"
         }
         console.log("state",state);
+    const navigatToprofile=()=>{
+        console.log("sidebar here");
+
+    }
+
+    
+
     const RenderMenu=()=>{
-         if(state){
+      const email=localStorage.getItem("email")
+         if(email){
             return (
                 <>
                     <li className="nav-item">
@@ -37,7 +46,7 @@ const Navbar=(props)=> {
           <Link className="nav-link" onClick={handleLogout}>Logout</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link">Hi {user}</Link>
+          <Link className="nav-link" onClick={navigatToprofile}>Hi {user}</Link>
         </li>
 
                 </>
@@ -64,7 +73,6 @@ const Navbar=(props)=> {
     }
     return (
       <div>
-
 <nav className="navbar navbar-expand-lg navbar-light bg-light">
   <div className="container-fluid">
     <Link className="navbar-brand" to="#"><img src={Aicte} alt="" className='imageaicte'/></Link>
