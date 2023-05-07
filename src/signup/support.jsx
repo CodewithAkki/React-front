@@ -2,7 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import swal from "sweetalert";
 import "./signup.css";
-
+import { storage } from "../firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 function Support() {
   const url = "http://127.0.0.1:8000/users/";
@@ -13,7 +14,10 @@ function Support() {
     college:"",
     contact_no: "",
     password: "",
-    role:""
+    role:"",
+    address:"",
+    department:"",
+    university:""
   });
 const navigate = useNavigate();
   function handle(e) {
@@ -25,13 +29,55 @@ const navigate = useNavigate();
 
   const [value, setValue] = useState();
 
+
+  const [imageUpload, setImageUpload] = useState(null);
+  const [imgUrl, setImgUrl] = useState(null);
+  const [progresspercent, setProgresspercent] = useState(0);
+  let imgUrl_ ;
+  // const customViewsArray =  [new google.picker.DocsView()]; // custom view
+  const uploadfile = (files) => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name}`);
+    const uploadTask = uploadBytesResumable(imageRef, imageUpload);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        
+        setProgresspercent(progress);
+
+      },
+      (error) => {
+        alert(error);
+      },
+      () => {
+        getDownloadURL(imageRef).then((downloadURL) => {
+          setData({...data,Storage_link:downloadURL});
+          
+          submit(downloadURL);
+
+        });
+      }
+    );
+   
+
+
+
+
+
+  };
+
+
+
   const handleChange = (e) => {
     setValue(e.target.value);
     console.log(value);
   };
 
-  function submit(e) {
-    e.preventDefault();
+  function submit(downloadURL) {
+   
     axios
       .post(url, {
         email: data.email,
@@ -41,7 +87,11 @@ const navigate = useNavigate();
         college:data.college,
         department:data.department,
         phone_no: data.contact_no,
-        role: value
+        role: value,
+        address:data.address,
+        department:data.department,
+        university:data.university,
+        profilePic:downloadURL
       })
       .then((res) => {
         console.log(res.status);
@@ -54,8 +104,8 @@ const navigate = useNavigate();
             button: "ok",
           });
           navigate("/login");
-        }
-        if (res.data.message === "fail to register") {
+        }else
+        {
           swal({
             title: "try again",
             text: "fail to register",
@@ -136,6 +186,16 @@ const navigate = useNavigate();
                           <input
                             type="text"
                             onChange={(e) => handle(e)}
+                            value={data.university}
+                            id="university"
+                            placeholder="University"
+                            className="form-control"
+                          />
+                        </div>
+                        <div className="form-outline mb-4">
+                          <input
+                            type="text"
+                            onChange={(e) => handle(e)}
                             value={data.college}
                             id="college"
                             placeholder="College name"
@@ -163,6 +223,42 @@ const navigate = useNavigate();
                             className="form-control"
                           />
                         </div>
+
+                        <div className="form-outline mb-4">
+                          <input
+                            type="text"
+                            onChange={(e) => handle(e)}
+                            value={data.department.toUpperCase()}
+                            id="department"
+                            placeholder="Department"
+                            className="form-control"
+                          />
+                        </div>
+
+                        <div className="form-outline mb-4">
+                          <input
+                            type="text"
+                            onChange={(e) => handle(e)}
+                            value={data.address}
+                            id="address"
+                            placeholder="state"
+                            className="form-control"
+                          />
+                        </div>
+
+                        <div className="form-outline mb-4">
+                        <input
+                          type="file"
+                          id="projectName"
+                          placeholder="projectName"
+                          className="form-control form-control-lg"
+                          onChange={(event) => {
+                            setImageUpload(event.target.files[0]);
+                          }}
+                          accept="image/x-png,image/gif,image/jpeg" 
+                        />
+                      </div>
+
                          {/* Select */}
                          <div className="form-ouline mb-4">
                           <select
@@ -173,12 +269,12 @@ const navigate = useNavigate();
                             value={data.option}
                           >
                              <option selected>Select option</option>
-                            <option value="2">Student</option>
-                            <option value="6">Guide</option>
-                            <option value="5">HOD</option>
+                            <option value="5">Student</option>
+                            <option value="1">Guide</option>
+                            <option value="3">HOD</option>
                             <option value='4'>Dean</option>
-                            <option value='3'>AICTE</option> 
-                            <option value='1'>Teacher</option> 
+                            <option value='2'>AICTE</option> 
+                          
                           </select>
                         </div>
                         {/* Checkbox */}
@@ -186,8 +282,9 @@ const navigate = useNavigate();
                        
                         {/* Submit button */}
                         <button
-                          type="submit"
+                          type="button"
                           className="btn btn-primary btn-block mb-5 w-10"
+                          onClick={uploadfile}
                         >
                           Sign up
                         </button>

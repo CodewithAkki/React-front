@@ -48,19 +48,24 @@ if (data.email != "admin@gmail.com" && data.password!="admin") {
               button: "ok",
             });
               navigate("/");
-            console.log(res.data.picture);
+
+            console.log(res.data);
             localStorage.setItem("email",res.data.email);
+            localStorage.setItem("contact_no",res.data.phone_no);
             localStorage.setItem("userId",res.data.userId);
             localStorage.setItem("role",res.data.role);
             localStorage.setItem("picture",res.data.picture);
             localStorage.setItem("first_name",res.data.first_name);
             localStorage.setItem("last_name",res.data.last_name);
             localStorage.setItem("college",res.data.college);
+            localStorage.setItem("state",res.data.address);
+            localStorage.setItem("department",res.data.department);
+            localStorage.setItem("university",res.data.university);
           }
-          else if (res.data.message === "fail to login"){
+          else {
             swal({
               title: "try again",
-              text: "fail to register",
+              text: "fail to login",
               icon: "error",
               button: "ok",
             });

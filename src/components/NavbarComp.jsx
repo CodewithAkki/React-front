@@ -23,8 +23,8 @@ const Navbar=(props)=> {
     
 
     const RenderMenu=()=>{
-      const email=localStorage.getItem("email")
-         if(email){
+      const role=localStorage.getItem("role")
+         if(role=="Student"){
             return (
                 <>
                     <li className="nav-item">
@@ -51,7 +51,35 @@ const Navbar=(props)=> {
 
                 </>
             )
-         }else{
+         }
+         else if(role=="AICTE member" | role=="Dean" | role=="Hod" | role=="Guid") {
+         return( <>
+          <li className="nav-item">
+<Link className="nav-link " aria-current="page" to="/">Home</Link>
+</li>
+{/*<li className="nav-item">
+<Link className="nav-link" to="/project">Project</Link>
+         </li>*/}
+<li className="nav-item">
+<Link className="nav-link" to="/approval">Approval</Link>
+</li>
+<li className="nav-item">
+<Link className="nav-link" to="/event">Events</Link>
+</li>
+<li className="nav-item">
+<Link className="nav-link" to="/about">About</Link>
+</li>
+<li className="nav-item">
+<Link className="nav-link" onClick={handleLogout}>Logout</Link>
+</li>
+<li className="nav-item">
+<Link className="nav-link" onClick={navigatToprofile}>Hi {user}</Link>
+</li>
+
+      </>
+  )
+         }
+         else{
             return(
                 <>
         <li className="nav-item">
