@@ -63,11 +63,12 @@ function Project() {
   const [imageUpload, setImageUpload] = useState(null);
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
+  const [disablity,setdisablity]=useState('');
   let imgUrl_ ;
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
   const uploadfile = (files) => {
     if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${imageUpload.name}`);
+    const imageRef = ref(storage, `projects/${imageUpload.name}`);
     const uploadTask = uploadBytesResumable(imageRef, imageUpload);
     uploadTask.on(
       "state_changed",
@@ -93,9 +94,9 @@ function Project() {
     );
 };
 
-const uploadfileUpdate = (files) => {
+const uploadfileUpdate = (file) => {
   if (imageUpload == null) return;
-  const imageRef = ref(storage, `images/${imageUpload.name}`);
+  const imageRef = ref(storage, `images/${imageUpload}`);
   const uploadTask = uploadBytesResumable(imageRef, imageUpload);
   uploadTask.on(
     "state_changed",
@@ -113,35 +114,68 @@ const uploadfileUpdate = (files) => {
     () => {
       getDownloadURL(imageRef).then((downloadURL) => {
         setData({...data,Storage_link:downloadURL});
-        
-        updateprofile(downloadURL);
-
+        alert(downloadURL);
+        updateprofileImage(downloadURL);
+        localStorage.setItem("picture",downloadURL)
+        window.location.reload(false)
       });
     }
   );};
 
-  function updateprofile(downloadURL){
-    fetch('http://localhost:8000/users/'+userId, {
+  function updateprofileImage(downloadURL){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+      "profilePic": downloadURL
+    });
+    
+    var requestOptions = {
       method: 'PATCH',
-      body: JSON.stringify({
-        
-          first_name: data_user.first_name,
-          last_name: data_user.last_name,
-          college:data_user.college,
-          department: data_user.department,
-          university: data_user.university,
-          phone_no: data_user.contact_no,
-          address: data_user.address,
-          email: data_user.email,
-          profilePic: downloadURL
-        
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    fetch("http://localhost:8000/users/update/"+userId, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+
+  }
+
+
+  function updateprofile(){
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+  "first_name": data_user.first_name,
+  "last_name": data_user.last_name,
+  "college": data_user.college,
+  "department": data_user.department,
+  "university": data_user.university,
+  "phone_no": data_user.contact_no,
+  "address": data_user.address,
+  "birthdate": data_user.birthdate,
+  "email": data_user.email,
+  "role": data_user.role
+});
+
+
+    
+var requestOptions = {
+  method: 'PATCH',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("http://localhost:8000/users/update/"+userId, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
   }
 
   function handle(e) {
@@ -173,7 +207,8 @@ email :   someshkamble@gmail.com
       title: 'Login Form',
       html: `
       
-      <input type="text" id="name" class="swal2-input" value=`+email+` placeholder="Name" style="width:400px;">
+      <input type="text" id="first_name" class="swal2-input" value=`+first_name+` placeholder="First_Name" style="width:400px;">
+      <input type="text" id="last_name" class="swal2-input" value=`+last_name+` placeholder="Last_Name" style="width:400px;">
       <input type="text" id="department" class="swal2-input" value=`+department+` placeholder="Department" style="width:400px">
       <input type="text" id="contact_no" class="swal2-input" value=`+contact_no+` placeholder="contact no" style="width:400px">
       <input type="text" id="role" class="swal2-input"  value=`+role+` placeholder="Role" style="width:400px">
@@ -181,14 +216,14 @@ email :   someshkamble@gmail.com
       <input type="text" id="college" class="swal2-input" value=`+college+` placeholder="college" style="width:400px">
       <input type="text" id="state" class="swal2-input" value=`+state+` placeholder="State" style="width:400px">
       <input type="text" id="email" class="swal2-input" value=`+email+` placeholder="email" style="width:400px">
-      <input type="file" id="profilepic" class="swal2-input"  placeholder="profile" style="width:400px">
       
       `,
       customClass: 'swal-wide',
       confirmButtonText: 'Edit',
       focusConfirm: false,
       preConfirm: () => {
-        const name = Swal.getPopup().querySelector('#name').value
+        const first_name = Swal.getPopup().querySelector('#first_name').value
+        const last_name = Swal.getPopup().querySelector('#last_name').value
         const department = Swal.getPopup().querySelector('#department').value
         const role = Swal.getPopup().querySelector('#role').value
         const contact_no = Swal.getPopup().querySelector('#contact_no').value
@@ -196,19 +231,18 @@ email :   someshkamble@gmail.com
         const college = Swal.getPopup().querySelector('#college').value
         const state = Swal.getPopup().querySelector('#state').value
         const email = Swal.getPopup().querySelector('#email').value
-        const profilepic = Swal.getPopup().querySelector('#profilepic').value
-        if (!name || !department || !role || !university || !college || !state || !email ) {
+        if (!last_name||!first_name || !department || !role || !university || !college || !state || !email ) {
           Swal.showValidationMessage(`Please enter login and password`)
         }
         return { 
-                 name: name, 
+                 first_name: first_name, 
+                 last_name: last_name, 
                  department: department,
                  role:role,
                  university:university,
                  college:college,
                  state:state,
                  email:email,
-                 profilepic:profilepic,
                  contact_no:contact_no
                 }
       }
@@ -227,9 +261,9 @@ email :   someshkamble@gmail.com
     */}
       const file =result.value.profilepic
       
-      const names = result.value.name.split()
-      setData_user({...data_user,first_name:names[0]});
-      setData_user({...data_user,last_name:names[1]});
+      
+      setData_user({...data_user,first_name:result.value.first_name});
+      setData_user({...data_user,last_name:result.value.last_name});
       setData_user({...data_user,email:result.value.email});
       setData_user({...data_user,college:result.value.college});
       setData_user({...data_user,contact_no:result.value.contact_no});
@@ -237,22 +271,55 @@ email :   someshkamble@gmail.com
       setData_user({...data_user,address:result.value.address});
       setData_user({...data_user,department:result.value.department});
       setData_user({...data_user,university:result.value.university});
-      uploadfileUpdate(file);
 
-      Swal.fire(`
-        name: ${result.value.name}
-        department: ${result.value.department}
-        role:${result.value.role}
-        university:${result.value.university}
-        college:${result.value.college}
-        state:${result.value.state}
-        email:${result.value.email}
-        profilepic:${result.value.profilepic}
-      `.trim())
+      updateprofile();
+
+
     })
 
   }
 
+function profilechange(){
+  Swal.fire({
+    title: 'Change Image',
+    html: `
+    <input type="file" name="choose image" id="profile"/>
+
+    `,
+    customClass: 'swal-wide',
+    confirmButtonText: 'Edit',
+    focusConfirm: false,
+    preConfirm: () => {
+      const profilepic = Swal.getPopup().querySelector('#profile').value
+
+      if (!profilepic ) {
+        Swal.showValidationMessage(`Please enter login and password`)
+      }
+      return { 
+        profilepic:profilepic
+              }
+    }
+  }).then((result) => {
+
+    {/*
+         first_name: "",
+  last_name: "",
+  email: "",
+  college:"",
+  contact_no: "",
+  role:"",
+  address:"",
+  department:"",
+  university:""
+  */}
+    const file =result.value.profilepic
+
+    uploadfileUpdate(file);
+
+
+  })
+
+}
 
   const handleShow = () => {
     setShow(true);
@@ -340,16 +407,23 @@ email :   someshkamble@gmail.com
                   borderRadius:"50%"
                 }}
                 />
+                    <input
+                          type="file"
+                          id="profile"
+                          placeholder="Choose photo"
+                          className="form-control form-control-lg"
+                          onChange={(event) => {
+                            setImageUpload(event.target.files[0]);
+                          }}
+                          accept="image/x-png,image/gif,image/jpeg" 
+                        />
+                <button className="btn btn-primary" onClick={uploadfileUpdate}>Edit Profile</button>
                 <p style={{marginTop:"50px",marginLeft:"40px"}}>Name :&nbsp; &nbsp;{first_name+" "+last_name}</p>
                 <p style={{marginTop:"5px",marginLeft:" 0px"}}>department :&nbsp; &nbsp;{department}</p>
-                
                 <p style={{marginTop:"0px",marginLeft:"45px"}}>Role :&nbsp; &nbsp;{role}</p>
                 <p style={{marginTop:"5px",marginLeft:"5px"}}>University :&nbsp; &nbsp;{university}</p>
-
                 <p style={{marginTop:"5px",marginLeft:"25px"}}>college :&nbsp; &nbsp;{college}</p>
                 <p style={{marginTop:"5px",marginLeft:"40px"}}>State :&nbsp; &nbsp;{state}</p>
-
-               
                 <p style={{marginTop:"5px",marginLeft:"40px"}}>email :&nbsp; &nbsp;{email} </p>
                 {/*<input
                           type="file"
@@ -369,10 +443,11 @@ email :   someshkamble@gmail.com
                         className="btn btn-primary mb-3"
                         onClick={editProfile}
                         style={{
-                          marginLeft:"2px"
+                          marginLeft:"40px",
+                          marginTop:"0px"
                         }}
                       >
-                        edit
+                        Edit 
                       </button>
           </div>
            
@@ -424,15 +499,9 @@ email :   someshkamble@gmail.com
                         />
                       </div>
                       <div className="form-outline mb-4">
-                        <input
-                          type="checkbox"
-                          onChange={(e) => handle(e)}
-                          id="patent"
-                          value={data.patent}
-                        />{" "}
-                        is Patent
+                   
                       </div>
-                      {patentInfo && (
+                     
                         <div className="form-outline mb-4">
                           <input
                             type="text"
@@ -443,7 +512,7 @@ email :   someshkamble@gmail.com
                             className="form-control form-control-lg"
                           />
                         </div>
-                      )}
+                     
                       <div className="form-outline mb-4">
                         <input
                           type="text"
@@ -564,7 +633,37 @@ console.log(e);
 
 
 }
-
+function createGroup(e){
+  
+  Swal.fire({
+    title: 'Login Form',
+    html: 
+    `
+    <input type="text" id="user1" class="swal2-input" placeholder="Username">
+    <input type="text" id="user2" class="swal2-input" placeholder="Username">
+    <input type="text" id="user3" class="swal2-input" placeholder="Username">
+    <input type="text" id="user4" class="swal2-input" placeholder="Username">
+    <input type="text" id="user5" class="swal2-input" placeholder="Username">
+    
+    `,
+    confirmButtonText: 'Sign in',
+    focusConfirm: false,
+    preConfirm: () => {
+      const user1 = Swal.getPopup().querySelector('#user1').value
+      const user2 = Swal.getPopup().querySelector('#user2').value
+      const user3 = Swal.getPopup().querySelector('#user3').value
+      const user4 = Swal.getPopup().querySelector('#user4').value
+      const user5 = Swal.getPopup().querySelector('#user5').value
+      if (!user1 || !user2 || !user3 || !user4 || !user5) {
+        Swal.showValidationMessage(`Please enter username`)
+      }
+      return { user1: user1, user2: user2, user3: user3, user4: user4 , user5: user5}
+    }
+  }).then((result) => {
+      
+  })
+  
+}
 function deleteProject(e){
  
   Swal.fire({
@@ -676,6 +775,26 @@ function deleteProject(e){
                       >
                         delete
                       </button>
+                      <button
+                        type="button"
+                        className="btn  mb-3"
+                        onClick={() => createGroup(userData.id)}
+
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"25px",
+                          background:"black",
+                          borderColor:"black",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                       
+                      >
+                        create Group
+                      </button>
+
+
                 </div>
               </div>
             </div>

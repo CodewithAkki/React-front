@@ -271,9 +271,9 @@ const navigate = useNavigate();
                              <option selected>Select option</option>
                             <option value="5">Student</option>
                             <option value="1">Guide</option>
-                            <option value="3">HOD</option>
-                            <option value='4'>Dean</option>
-                            <option value='2'>AICTE</option> 
+                            <option value="2">HOD</option>
+                            <option value='3'>Dean</option>
+                            <option value='4'>AICTE</option> 
                           
                           </select>
                         </div>
