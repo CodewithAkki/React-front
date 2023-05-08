@@ -639,14 +639,14 @@ function createGroup(e){
     title: 'Login Form',
     html: 
     `
-    <input type="text" id="user1" class="swal2-input" placeholder="Username">
+    <input type="text" id="user1" class="swal2-input" placeholder="Leader">
     <input type="text" id="user2" class="swal2-input" placeholder="Username">
     <input type="text" id="user3" class="swal2-input" placeholder="Username">
     <input type="text" id="user4" class="swal2-input" placeholder="Username">
     <input type="text" id="user5" class="swal2-input" placeholder="Username">
     
     `,
-    confirmButtonText: 'Sign in',
+    confirmButtonText: 'Submit',
     focusConfirm: false,
     preConfirm: () => {
       const user1 = Swal.getPopup().querySelector('#user1').value
