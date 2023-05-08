@@ -32,8 +32,18 @@ function Project() {
     patent: "true",
     Patent_Info: "",
     Storage_link: "",
-    user:""
+    leader:""
   });
+  {/**
+
+    "leader": "somesh@gmail.com",
+  "user1": "akshaymithari98@gmail.com",
+  "user2": "santoshmithari@gmail.com",
+  "user3": "surajmithari@gmail.com",
+  "user4": "parthmithari@gmail.com",
+  "project": ""
+
+*/}
 
   const [data_user, setData_user] = useState({
     first_name: "",
@@ -342,8 +352,17 @@ function profilechange(){
       .then((data) => setUser(data));
   };
 
+  const [assigned,setassigned]=useState([]);
+  const fetchAssigned=()=>{
+    return fetch("http://localhost:8000/Assigned/"+role+"/"+userId)
+    .then(response => response.text())
+    .then(result => setassigned(result))
+    .catch(error => console.log('error', error));
+  }
+{/*          Assigned project    */}
   useEffect(() => {
     fetchData();
+    fetchAssigned();
   }, []);
   console.log(data);
   function submit (downloadURL){
@@ -359,7 +378,7 @@ function profilechange(){
       domain: data.domain,
       is_patent: data.patent,
       patent_info: data.Patent_Info,
-      user:userId
+      leader:userId
     }).then((res) => {
       
       swal({
@@ -604,7 +623,8 @@ const ProjectCard = () => {
     return fetch("http://localhost:8000/project/")
       .then((response) => response.json())
       .then((data) =>{
-      data=data.filter((e)=>e.user== userId || e.type==="Public")
+        data=data.filter((e)=>e.leader== userId || e.type==="Public") 
+      console.log(data);
       setUser(data)});//.reverse())});
   
   };
@@ -612,8 +632,18 @@ const ProjectCard = () => {
 console.log(e);
   Swal.fire({
     title: 'Login Form',
-    html: `<input type="text" id="login" class="swal2-input" placeholder="Username">
-    <input type="password" id="password" class="swal2-input" placeholder="Password">`,
+    html: `
+
+    <input type="text" id="projectName" class="swal2-input" placeholder="projectName">
+    <input type="text" id="description" class="swal2-input" placeholder="description">
+    <input type="date" id="endDate" class="swal2-input" placeholder="endDate">
+    <input type="radio" id="type" value="Public" name="repoType"/>Public
+    <input type="radio" id="type" value="Private" name="repoType"/>Private
+    <input type="text" id="Patent_Info" class="swal2-input" placeholder="Patent_Info">
+    <input type="text" id="leader" class="swal2-input" placeholder="leader">
+    <input type="file" id="login" class="swal2-input" placeholder="choose Project">
+   
+    `,
     confirmButtonText: 'Sign in',
     focusConfirm: false,
     preConfirm: () => {
@@ -633,37 +663,75 @@ console.log(e);
 
 
 }
+const [Groups,setGroups]=useState([]);
+const fetchDataGroup = (e) => {
+return fetch("http://localhost:8000/project/Group/"+e)
+  .then(response => response.json())
+  .then(result => setGroups(result))
+  .catch(error => console.log('error', error));
+
+};
 function createGroup(e){
-  
+
+  fetchDataGroup(e);
+  console.log(Groups);
+  let leader=(Groups.leader)?Groups.leader:"leader";
+  let user1=(Groups.user1)?Groups.leader:"Username";
+  let user2=(Groups.user2)?Groups.leader:"Username";
+  let user3=(Groups.user3)?Groups.leader:"Username";
+  let user4=(Groups.user4)?Groups.leader:"Username";
   Swal.fire({
-    title: 'Login Form',
+    title: 'Create Group',
     html: 
     `
-    <input type="text" id="user1" class="swal2-input" placeholder="Leader">
-    <input type="text" id="user2" class="swal2-input" placeholder="Username">
-    <input type="text" id="user3" class="swal2-input" placeholder="Username">
-    <input type="text" id="user4" class="swal2-input" placeholder="Username">
-    <input type="text" id="user5" class="swal2-input" placeholder="Username">
+    <input type="email" id="user1" class="swal2-input" value=`+leader+` placeholder="Leader">
+    <input type="email" id="user2" class="swal2-input" value=`+user1+` placeholder="Username">
+    <input type="email" id="user3" class="swal2-input" value=`+user2+` placeholder="Username">
+    <input type="email" id="user4" class="swal2-input" value=`+user3+` placeholder="Username">
+    <input type="email" id="user5" class="swal2-input" value=`+user4+` placeholder="Username">
     
     `,
     confirmButtonText: 'Submit',
     focusConfirm: false,
     preConfirm: () => {
-      const user1 = Swal.getPopup().querySelector('#user1').value
+      const leader = Swal.getPopup().querySelector('#user1').value
       const user2 = Swal.getPopup().querySelector('#user2').value
       const user3 = Swal.getPopup().querySelector('#user3').value
       const user4 = Swal.getPopup().querySelector('#user4').value
       const user5 = Swal.getPopup().querySelector('#user5').value
-      if (!user1 || !user2 || !user3 || !user4 || !user5) {
+      if (!leader || !user2 || !user3 || !user4 || !user5) {
         Swal.showValidationMessage(`Please enter username`)
       }
-      return { user1: user1, user2: user2, user3: user3, user4: user4 , user5: user5}
+      return { user1: leader, user2: user2, user3: user3, user4: user4 , user5: user5}
     }
   }).then((result) => {
-      
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+      "leader": result.value.user1,
+      "user1": result.value.user2,
+      "user2": result.value.user3,
+      "user3": result.value.user4,
+      "user4": result.value.user5,
+      "project": e
+    });
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    fetch("localhost:8000/project/Group", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
   })
   
 }
+
 function deleteProject(e){
  
   Swal.fire({
@@ -719,10 +787,10 @@ function deleteProject(e){
                     className="card-title mb-5 mt-3"
                     style={{ marginLeft: "10px" }}
                   >
-                    {/*<a
+                    <a
                       href={userData.Storage_link}
                       style={{ textDecoration: "none",fontSize:"1.4rem" }}
-          >*/}
+          >
              <Badge className="m-2" pill bg="secondary"
              style={{
                 position:"absolute",
@@ -732,8 +800,10 @@ function deleteProject(e){
              >
                       {userData.type}
                     </Badge>
+        
+
                       <h3>{userData.name} </h3>
-              {/*      </a>     */}
+                    </a>     
                  
                     <p style={{fontSize:"0.8rem"}}>Updated on {userData.end_date}</p>
                   <p>{userData.description.slice(0, 202)}...</p>
