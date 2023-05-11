@@ -1,0 +1,11 @@
+.nav-link1{
+    margin-left: 250px;
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+}
+.nav-link1:hover{
+    color: rgb(184, 184, 184);
+    background-color: transparent;
+    text-decoration: none;
+}

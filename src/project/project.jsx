@@ -214,7 +214,7 @@ email :   someshkamble@gmail.com
 
 */}
     Swal.fire({
-      title: 'Login Form',
+      title: 'user Form',
       html: `
       
       <input type="text" id="first_name" class="swal2-input" value=`+first_name+` placeholder="First_Name" style="width:400px;">
@@ -631,34 +631,58 @@ const ProjectCard = () => {
   const details = (e) => {
 console.log(e);
   Swal.fire({
-    title: 'Login Form',
+    title: 'project Form',
     html: `
 
     <input type="text" id="projectName" class="swal2-input" placeholder="projectName">
     <input type="text" id="description" class="swal2-input" placeholder="description">
-    <input type="date" id="endDate" class="swal2-input" placeholder="endDate">
-    <input type="radio" id="type" value="Public" name="repoType"/>Public
-    <input type="radio" id="type" value="Private" name="repoType"/>Private
+    <input type="date" id="endDate" class="swal2-input" placeholder="endDate"></br>
+    <input type="radio" id="type" value="Public" name="repoType"/>Public</br>
+    <input type="radio" id="type" value="Private" name="repoType"/>Private</br>
     <input type="text" id="Patent_Info" class="swal2-input" placeholder="Patent_Info">
-    <input type="text" id="leader" class="swal2-input" placeholder="leader">
+    
     <input type="file" id="login" class="swal2-input" placeholder="choose Project">
    
     `,
     confirmButtonText: 'Sign in',
     focusConfirm: false,
     preConfirm: () => {
-      const login = Swal.getPopup().querySelector('#login').value
-      const password = Swal.getPopup().querySelector('#password').value
-      if (!login || !password) {
+      const projectName = Swal.getPopup().querySelector('#projectName').value
+      const endDate = Swal.getPopup().querySelector('#endDate').value
+      const type = Swal.getPopup().querySelector('#type').value
+      const Patent_Info = Swal.getPopup().querySelector('#Patent_Info').value
+      const description = Swal.getPopup().querySelector('#description').value
+      if (!projectName || !endDate ||!Patent_Info  ||!description ||!type  ) {
         Swal.showValidationMessage(`Please enter login and password`)
       }
-      return { login: login, password: password }
+      return { projectName: projectName, endDate: endDate,Patent_Info:Patent_Info, description:description,type:type}
     }
   }).then((result) => {
-    Swal.fire(`
-      Login: ${result.value.login}
-      Password: ${result.value.password}
-    `.trim())
+ 
+    var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "name": result.value.projectName,
+  "is_patent": true,
+  "patent_info": result.value.Patent_Info,
+  "end_date": result.value.endDate,
+  "type": result.value.type,
+  "description": result.value.description,
+});
+
+var requestOptions = {
+  method: 'PATCH',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("http://localhost:8000/project/"+e+"/", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
   })
 
 

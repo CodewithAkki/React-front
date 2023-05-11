@@ -1,3 +1,13 @@
-.card-text{
-    height: 200px;
+.bar{
+    display: flex;
+    background-color: black;
+    padding-bottom: 20px;
+}
+.btnguid{
+    margin-top: 20px;
+    margin-left: 50px;
+    width: 300px;
+    background: transparent;
+    border: none;
+    color: aliceblue;
 }
