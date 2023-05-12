@@ -360,9 +360,14 @@ function profilechange(){
     .catch(error => console.log('error', error));
   }
 {/*          Assigned project    */}
+
+
+
+
   useEffect(() => {
     fetchData();
     fetchAssigned();
+  
   }, []);
   console.log(data);
   function submit (downloadURL){
@@ -584,6 +589,7 @@ function profilechange(){
                         />{" "}
                         Private
                       </div>
+
                       <div className="form-outline mb-4">
                         <input
                           type="file"
@@ -786,13 +792,74 @@ function deleteProject(e){
   })
 
 }
+const college=localStorage.getItem("college");
+const [guid, setguid] = useState([]);
+const [guidselection, setguidselection] = useState(true);
+const [guidselection1, setguidselection1] = useState(false);
+const guidselectionactive=()=>{
+  setguidselection(true);
+  setguidselection1(false);
 
+}
+const guidselectdisactive=()=>{
+  setguidselection1(true);
+  setguidselection(false);
+}
+const fetchguid = () => {
+  const userId=localStorage.getItem("userId")
+  return fetch("http://localhost:8000/users/")
+    .then((response) => response.json())
+    .then((data) =>{
+      data=data.filter((e)=>e.college===college || e.role===2)
+    console.log(data);
+    setguid(data)});//.reverse())});
 
+};
 
   useEffect(() => {
     fetchData();
+    fetchguid();
+
   }, []);
-  console.log(user);
+
+function projectguidUpdate(){
+  const valuedrop = localStorage.getItem("dropdownvalue");
+  const project = localStorage.getItem("dropdownproject");
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  
+  var raw = JSON.stringify({
+    "guid": valuedrop
+  });
+  
+  var requestOptions = {
+    method: 'PATCH',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  
+  fetch("http://localhost:8000/project/"+project+"/", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+
+}
+  function selectguid(e,project){
+    localStorage.setItem("dropdownvalue",e.target.value);
+    localStorage.setItem("dropdownproject",project)
+   
+      fetch("http://localhost:8000/project/assignedguid/"+e.target.value)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
+    
+    guidselectdisactive();
+    projectguidUpdate()
+
+    }
+
+
   return (
     
     <div className="container">
@@ -801,6 +868,7 @@ function deleteProject(e){
         {user &&
           user.length > 0 &&
           user.map((userData, index) => (
+            
             <div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
               <div
                 className="card"
@@ -830,7 +898,7 @@ function deleteProject(e){
                     </a>     
                  
                     <p style={{fontSize:"0.8rem"}}>Updated on {userData.end_date}</p>
-                  <p>{userData.description.slice(0, 202)}...</p>
+                  <p>{userData.description}</p>
                   </p>
                   
                   <button
@@ -869,6 +937,33 @@ function deleteProject(e){
                       >
                         delete
                       </button>
+                      <div
+                      style={{
+                        width:"200px",
+                        position:"absolute",
+                        right:10,
+                        marginTop:"-100px"
+                      }}
+                      >
+                     {guidselection ||!userData.guid && <select
+             
+                          //value={}
+                          className="form-control form-control-lg"
+                          onChange={(e) => selectguid(e,userData.id)}
+                          id="domain"
+
+                          
+                        >
+                            <option selected>Select option</option>
+                          
+                          {guid &&
+                            guid.map((data) => (
+                              
+                              <option value={data.id}>{data.first_name+" "+data.last_name}</option>
+                            ))}
+                        </select>}
+                        {guidselection1 || userData.guid &&<input type="text" style={{width:"200px"}}value={userData.guid} disabled/>}
+                                  </div>
                       <button
                         type="button"
                         className="btn  mb-3"

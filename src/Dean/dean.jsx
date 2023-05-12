@@ -1,7 +1,10 @@
 import React from 'react'
 
-export default function dean() {
+export default function 
+() {
   return (
-    <div>dean</div>
+    <div>
+      
+    </div>
   )
 }
