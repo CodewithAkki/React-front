@@ -110,6 +110,7 @@ return (
               className='btnguid'
               type="submit"
               onClick={handleGuid1}
+              disabled
             >
               Guid
             </button>}
@@ -117,6 +118,7 @@ return (
               type="submit"
               className='btnguid'
               onClick={handleGuid}
+              
             >
               Guid
             </button>}

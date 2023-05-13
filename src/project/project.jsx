@@ -854,7 +854,7 @@ function projectguidUpdate(){
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
     
-    guidselectdisactive();
+    
     projectguidUpdate()
 
     }
@@ -945,7 +945,7 @@ function projectguidUpdate(){
                         marginTop:"-100px"
                       }}
                       >
-                     {guidselection ||!userData.guid && <select
+                     {guidselection && <select
              
                           //value={}
                           className="form-control form-control-lg"
