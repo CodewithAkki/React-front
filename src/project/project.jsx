@@ -810,7 +810,7 @@ const fetchguid = () => {
   return fetch("http://localhost:8000/users/")
     .then((response) => response.json())
     .then((data) =>{
-      data=data.filter((e)=>e.college===college || e.role===2)
+      data=data.filter((e)=>e.college===college && e.role===2)
     console.log(data);
     setguid(data)});//.reverse())});
 

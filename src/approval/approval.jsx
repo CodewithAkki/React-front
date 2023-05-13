@@ -245,8 +245,8 @@ return (
                           width:"150px",
                           marginTop:"-50px",
                           marginLeft:"0px",
-                          background:"#808080",
-                          borderColor:"#808080",
+                          background:"green",
+                          borderColor:"green",
                           color:"white",
                           fontWeight:"bold"
                         }}
@@ -271,6 +271,24 @@ return (
                        
                       >
                         Disapprove
+                      </button>
+                      <button
+                        type="button"
+                        className="btn  mb-3"
+                        onClick={() => deleteProject(projectdata.id)}
+
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"25px",
+                          background:"#808080",
+                          borderColor:"#808080",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                       
+                      >
+                        Message
                       </button>
                       </div>
               </div>
