@@ -18,6 +18,9 @@ const Approval = () => {
   const [aict1,setAict1] = useState(true);
   const [newBtnShow1,setnewBtnShow1] = useState(false);
   const [newBtnShow, setnewBtnShow] = useState(true);
+  const [conhod,setconhod]=useState(false);
+  const [projecthod, projectsethod] = useState([]);
+  
   const handleGuid = () => {
     setguid(true);
     setguid1(false);
@@ -57,6 +60,28 @@ const Approval = () => {
     setAict(true);
     setAict1(false);
 
+    ///////start hod display
+    const role=localStorage.getItem('role');
+      
+    if(role==="Hod"){
+      setcon(true);
+      const userId=localStorage.getItem("userId")
+      fetch("http://localhost:8000/project/")
+        .then((response) => response.json())
+        .then((data) =>{
+        data=data.filter((e)=>e.hod==userId)
+        projectsethod(data)});
+        
+    }else {
+      const userId=localStorage.getItem("userId")
+      fetch("http://localhost:8000/project/")
+        .then((response) => response.json())
+        .then((data) =>{
+          
+        console.log(data);
+        projectsethod(data)});
+        setconhod(true);
+    }
   };
 
   const handleDean = () => {
@@ -99,34 +124,41 @@ const Approval = () => {
     setguid1(false);
   };
 
+    
 
+
+    const [con,setcon]=useState(false);
     const [projectuser, projectsetUser] = useState([]);
     const ProjectCards = () => {
       const role=localStorage.getItem('role');
       
       if(role==="Guid"){
-  
+        setcon(true);
         const userId=localStorage.getItem("userId")
         fetch("http://localhost:8000/project/")
           .then((response) => response.json())
           .then((data) =>{
-          data=data.filter((e)=>e.guid===6) 
+          data=data.filter((e)=>e.guid==userId) 
           projectsetUser(data)});
-        
+          
       }else {
         const userId=localStorage.getItem("userId")
         fetch("http://localhost:8000/project/")
           .then((response) => response.json())
           .then((data) =>{
-            data=data.filter((e)=>e.leader===userId) 
+            data=data.filter((e)=>e.role==2) 
           console.log(data);
           projectsetUser(data)});
+
       }
+      
       };
 function deleteProject(e){
 
 }
 function details(e){
+
+  console.log(e);
 
 }
   useEffect(() => {
@@ -205,10 +237,15 @@ return (
           projectuser.length > 0 &&
           projectuser.map((projectdata) => (
 <div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
+
               <div
                 className="card"
                 style={{ width: "50rem",height:"80%", marginLeft: "150xp" }}
-              >
+              ><Badge className="m-2" pill bg="secondary" style={{
+                height:"50px",
+                fontSize:"2em",
+
+              }}>Guid</Badge>
                 <div className="card-body">
                   <p
                     className="card-title mb-5 mt-3"
@@ -236,7 +273,7 @@ return (
                   <p>{projectdata.description}</p>
                   </p>
                   
-                  <button
+                 {con&& <div><button
                         type="button"
                         className="btn  mb-3"
                         
@@ -272,6 +309,8 @@ return (
                       >
                         Disapprove
                       </button>
+                      </div>
+                      }
                       <button
                         type="button"
                         className="btn  mb-3"
@@ -279,8 +318,8 @@ return (
 
                         style={{
                           width:"150px",
-                          marginTop:"-50px",
-                          marginLeft:"25px",
+                          marginTop:"-100px",
+                          marginLeft:"350px",
                           background:"#808080",
                           borderColor:"#808080",
                           color:"white",
@@ -297,7 +336,111 @@ return (
 
     </div>
 }
-{hod1 && <Hod/>}
+{hod1 && 
+  <div>
+     {projecthod &&
+          projecthod.length > 0 &&
+          projecthod.map((projectdata) => (
+<div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
+
+              <div
+                className="card"
+                style={{ width: "50rem",height:"80%", marginLeft: "150xp" }}
+              ><Badge className="m-2" pill bg="secondary" style={{
+                height:"50px",
+                fontSize:"2em",
+
+              }}>HOD</Badge>
+                <div className="card-body">
+                  <p
+                    className="card-title mb-5 mt-3"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <a
+                      href={projectdata.Storage_link}
+                      style={{ textDecoration: "none",fontSize:"1.4rem" }}
+          >
+             <Badge className="m-2" pill bg="secondary"
+             style={{
+                position:"absolute",
+                right:"0%",
+                
+             }}
+             >
+                      {projectdata.type}
+                    </Badge>
+        
+
+                      <h3>{projectdata.name} </h3>
+                    </a>     
+                 
+                    <p style={{fontSize:"0.8rem"}}>Updated on {projectdata.end_date}</p>
+                  <p>{projectdata.description}</p>
+                  </p>
+                  
+                 {conhod&& <div><button
+                        type="button"
+                        className="btn  mb-3"
+                        
+                        onClick={() => details(projectdata.id)}
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"0px",
+                          background:"green",
+                          borderColor:"green",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                        
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="btn  mb-3"
+                        onClick={() => deleteProject(projectdata.id)}
+
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"25px",
+                          background:"red",
+                          borderColor:"red",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                       
+                      >
+                        Disapprove
+                      </button>
+                      </div>
+                      }
+                      <button
+                        type="button"
+                        className="btn  mb-3"
+                        onClick={() => deleteProject(projectdata.id)}
+
+                        style={{
+                          width:"150px",
+                          marginTop:"-100px",
+                          marginLeft:"350px",
+                          background:"#808080",
+                          borderColor:"#808080",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                       
+                      >
+                        Message
+                      </button>
+                      </div>
+              </div>
+            </div>
+ ))}
+
+    </div>
+}
 {dean1 && <Dean/>}
 {aict1  && <Aicte/>}
 

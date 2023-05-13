@@ -624,12 +624,18 @@ export default Project;
 
 const ProjectCard = () => {
   const [user, setUser] = useState([]);
+  const [normal,setnormal]=useState(true);
   const fetchData = () => {
-    const userId=localStorage.getItem("userId")
+    const userId=localStorage.getItem("userId");
+
     return fetch("http://localhost:8000/project/")
       .then((response) => response.json())
       .then((data) =>{
-        data=data.filter((e)=>e.leader== userId || e.type==="Public") 
+        data=data.filter((e)=>e.leader== userId && e.type==="Public")
+        if(!data){
+          data=data;
+          setnormal(false);
+        } 
       console.log(data);
       setUser(data)});//.reverse())});
   
@@ -807,6 +813,7 @@ const guidselectdisactive=()=>{
 }
 const fetchguid = () => {
   const userId=localStorage.getItem("userId")
+ 
   return fetch("http://localhost:8000/users/")
     .then((response) => response.json())
     .then((data) =>{
@@ -856,7 +863,7 @@ function projectguidUpdate(){
     
     
     projectguidUpdate()
-
+    window.location.reload(false)
     }
 
 
@@ -901,7 +908,7 @@ function projectguidUpdate(){
                   <p>{userData.description}</p>
                   </p>
                   
-                  <button
+                {normal&&<>  <button
                         type="button"
                         className="btn  mb-3"
                         
@@ -936,7 +943,7 @@ function projectguidUpdate(){
                        
                       >
                         delete
-                      </button>
+                      </button></>}
                       <div
                       style={{
                         width:"200px",
@@ -945,7 +952,7 @@ function projectguidUpdate(){
                         marginTop:"-100px"
                       }}
                       >
-                     {guidselection && <select
+                     {normal&&guidselection && <select
              
                           //value={}
                           className="form-control form-control-lg"
