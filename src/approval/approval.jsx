@@ -2,7 +2,7 @@ import {React,useState,useEffect} from 'react'
 import Navbar from '../components/NavbarComp'
 import SubNavbar from '../components/subNavbar'
 import Dean from '../Dean/dean'
-import Guid from '../Guid/guid'
+import Badge from "react-bootstrap/Badge";
 import Hod from '../Hod/hod'
 import Aicte from '../Aicte/aicte'
 import '../approval/approval.css'
@@ -99,9 +99,41 @@ const Approval = () => {
     setguid1(false);
   };
 
+
+    const [projectuser, projectsetUser] = useState([]);
+    const ProjectCards = () => {
+      const role=localStorage.getItem('role');
+      
+      if(role==="Guid"){
+  
+        const userId=localStorage.getItem("userId")
+        fetch("http://localhost:8000/project/")
+          .then((response) => response.json())
+          .then((data) =>{
+          data=data.filter((e)=>e.guid===6) 
+          projectsetUser(data)});
+        
+      }else {
+        const userId=localStorage.getItem("userId")
+        fetch("http://localhost:8000/project/")
+          .then((response) => response.json())
+          .then((data) =>{
+            data=data.filter((e)=>e.leader===userId) 
+          console.log(data);
+          projectsetUser(data)});
+      }
+      };
+function deleteProject(e){
+
+}
+function details(e){
+
+}
   useEffect(() => {
-    handleGuid()
+    handleGuid();
+    ProjectCards();
   }, []);
+console.log("project data: ",projectuser);
 return (
     <>
     <Navbar/>
@@ -167,7 +199,86 @@ return (
               AICTE
             </button>}
 </div>
-{guid && <Guid/>}
+{guid && 
+  <div>
+     {projectuser &&
+          projectuser.length > 0 &&
+          projectuser.map((projectdata) => (
+<div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
+              <div
+                className="card"
+                style={{ width: "50rem",height:"80%", marginLeft: "150xp" }}
+              >
+                <div className="card-body">
+                  <p
+                    className="card-title mb-5 mt-3"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <a
+                      href={projectdata.Storage_link}
+                      style={{ textDecoration: "none",fontSize:"1.4rem" }}
+          >
+             <Badge className="m-2" pill bg="secondary"
+             style={{
+                position:"absolute",
+                right:"0%",
+                
+             }}
+             >
+                      {projectdata.type}
+                    </Badge>
+        
+
+                      <h3>{projectdata.name} </h3>
+                    </a>     
+                 
+                    <p style={{fontSize:"0.8rem"}}>Updated on {projectdata.end_date}</p>
+                  <p>{projectdata.description}</p>
+                  </p>
+                  
+                  <button
+                        type="button"
+                        className="btn  mb-3"
+                        
+                        onClick={() => details(projectdata.id)}
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"0px",
+                          background:"#808080",
+                          borderColor:"#808080",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                        
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="btn  mb-3"
+                        onClick={() => deleteProject(projectdata.id)}
+
+                        style={{
+                          width:"150px",
+                          marginTop:"-50px",
+                          marginLeft:"25px",
+                          background:"red",
+                          borderColor:"red",
+                          color:"white",
+                          fontWeight:"bold"
+                        }}
+                       
+                      >
+                        Disapprove
+                      </button>
+                      </div>
+              </div>
+            </div>
+ ))}
+
+    </div>
+}
 {hod1 && <Hod/>}
 {dean1 && <Dean/>}
 {aict1  && <Aicte/>}
