@@ -130,7 +130,7 @@ const Approval = () => {
           fetch("http://localhost:8000/project/")
             .then((response) => response.json())
             .then((data) =>{
-             data=data.filter((e)=>e.dean!=null)
+             data=data.filter((e)=>e.dean!=null )
             console.log(data);
             projectsetdean(data)});
             
