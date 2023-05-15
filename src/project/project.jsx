@@ -631,7 +631,7 @@ const ProjectCard = () => {
     return fetch("http://localhost:8000/project/")
       .then((response) => response.json())
       .then((data) =>{
-        data=data.filter((e)=>e.leader== userId && e.type==="Public")
+        data=data.filter((e)=>e.type==="Public" || (e.type==userId && e.type==="Private"))
         if(!data){
           data=data;
           setnormal(false);
