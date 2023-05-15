@@ -201,7 +201,7 @@ const Approval = () => {
           icon: "success",
           button: "ok",
         });
-      
+        window.location.reload(false)
       })
       .catch(error => console.log('error', error));
 
@@ -219,7 +219,7 @@ const Approval = () => {
       icon: "success",
       button: "ok",
     });
-  
+    window.location.reload(false)
   })
   .catch(error => console.log('error', error));
 
@@ -242,7 +242,7 @@ const Approval = () => {
             icon: "success",
             button: "ok",
           });
-        
+          window.location.reload(false)
         })
         .catch(error => console.log('error', error));
 
@@ -261,7 +261,7 @@ const Approval = () => {
       icon: "success",
       button: "ok",
     });
-  
+    window.location.reload(false)
   })
   .catch(error => console.log('error', error));
 
@@ -283,7 +283,7 @@ const Approval = () => {
             icon: "success",
             button: "ok",
           });
-        
+          window.location.reload(false)
         })
         .catch(error => console.log('error', error));
 
@@ -303,6 +303,7 @@ const Approval = () => {
     icon: "success",
     button: "ok",
   });
+  window.location.reload(false)
     }
 
 
