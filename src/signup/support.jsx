@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import swal from "sweetalert";
 import "./signup.css";
 import { storage } from "../firebase";
@@ -19,6 +19,35 @@ function Support() {
     department:"",
     university:""
   });
+  console.log(data)
+const [college,setcollege]=useState([]);
+  const fetchCollege=()=>{
+ return fetch("http://localhost:8000/users/college/")
+        .then((response) => response.json())
+        .then((data) =>{
+        console.log(data);
+        setcollege(data)});//.reverse())});
+    
+    
+  }
+  const [university,setUniversity]=useState([]);
+  const fetchUniversity=()=>{
+    return fetch("http://localhost:8000/users/university/")
+    .then((response) => response.json())
+    .then((data) =>{
+    console.log(data);
+    setUniversity(data)});
+  }
+
+  //console.log(university);
+
+  useEffect(() => {
+    fetchCollege();
+    fetchUniversity();
+  }, []);
+
+
+
 const navigate = useNavigate();
   function handle(e) {
     const newdata = { ...data };
@@ -34,6 +63,9 @@ const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
   let imgUrl_ ;
+  const collegeName=(e)=>{
+    console.log(e.target.value);
+  }
   // const customViewsArray =  [new google.picker.DocsView()]; // custom view
   const uploadfile = (files) => {
     if (imageUpload == null) return;
@@ -183,24 +215,51 @@ const navigate = useNavigate();
                           />
                         </div>
                         <div className="form-outline mb-4">
-                          <input
-                            type="text"
-                            onChange={(e) => handle(e)}
-                            value={data.university}
-                            id="university"
-                            placeholder="University"
-                            className="form-control"
-                          />
+                         <select
+             
+             //value={}
+             className="form-control form-control-lg"
+             onChange={(e) => {
+              console.log(e.target.value);
+              const value=e.target.value;
+              setData({...data,college:value})
+            }}
+             id="domain"
+
+             
+           >
+               <option selected>Select option</option>
+             
+             {college &&
+               college.map((data) => (
+                 
+                 <option value={data.code}>{data.collegeName}</option>
+               ))}
+           </select>
                         </div>
                         <div className="form-outline mb-4">
-                          <input
-                            type="text"
-                            onChange={(e) => handle(e)}
-                            value={data.college}
-                            id="college"
-                            placeholder="College name"
-                            className="form-control"
-                          />
+                       {/** university */}
+                       <select
+             
+             //value={}
+             className="form-control form-control-lg"
+             onChange={(e) => {
+              console.log(e.target.value);
+              const value=e.target.value;
+              setData({...data,university:value})
+            }}
+             id="domain"
+
+             
+           >
+               <option selected>Select option</option>
+             
+             {university &&
+               university.map((data) => (
+                 
+                 <option value={data.id}>{data.UniversityName}</option>
+               ))}
+           </select>
                         </div>
                         <div className="form-outline mb-4">
                           <input
@@ -272,8 +331,7 @@ const navigate = useNavigate();
                             <option value="1">Student</option>
                             <option value="2">Guide</option>
                             <option value="3">HOD</option>
-                            <option value='5'>Dean</option>
-                            <option value='4'>AICTE</option> 
+                            <option value='4'>Dean</option>
                           
                           </select>
                         </div>

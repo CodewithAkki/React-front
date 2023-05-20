@@ -780,7 +780,7 @@ function deleteProject(e){
     confirmButtonText: 'Yes, delete it!'
   }).then((result) => {
     if (result.isConfirmed) {
-
+      console.log(e);
       axios
       .delete("http://localhost:8000/project/"+e+"/")
       .then(response => {

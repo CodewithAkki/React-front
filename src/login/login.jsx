@@ -4,7 +4,7 @@ import Navbar from './navbar/navbar'
 import swal from 'sweetalert';
 import axios from 'axios';
 import NavbarComp from '../components/NavbarComp';
-
+import Swal from 'sweetalert2'
 import {  Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
@@ -25,6 +25,46 @@ const navigate = useNavigate();
       setData(newdata)
       console.log(newdata)
     }
+
+    const forgotPassword=()=>{
+      Swal.fire({
+        title: 'Login Form',
+        html: `<input type="text" id="login" class="swal2-input" placeholder="Enter email">`,
+        confirmButtonText: 'Submit',
+        focusConfirm: false,
+        preConfirm: () => {
+          const login = Swal.getPopup().querySelector('#login').value
+          if (!login) {
+            Swal.showValidationMessage(`Please enter email`)
+          }
+          return { login: login}
+        }
+      }).then((result) => {
+
+        var myHeaders = new Headers();
+myHeaders.append("Authorization", "token 2f6d6aea3a0c0e194747edb30de3fc427c111c22");
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "email": result.value.login
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("http://localhost:8000/users/SendEmail/", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+
+      })  
+    }
+
     function submit(e){
 
       e.preventDefault();
@@ -94,16 +134,7 @@ if (data.email != "admin@gmail.com" && data.password!="admin") {
             <div className="col-md-7 col-lg-6 col-xl-4 offset-xl-1 ">
               <form onSubmit={(e)=>submit(e)}>
                 <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start mt-20">
-                
-                  <button type="button" className="btn btn-primary btn-circle mx-1">
-                    <i className="fab fa-facebook-f" />
-                  </button>
-                  <button type="button" className="btn btn-primary btn-circle mx-1">
-                    <i className="fab fa-google" />
-                  </button>
-                  <button type="button" className="btn btn-primary btn-circle mx-1">
-                    <i className="fab fa-linkedin-in" />
-                  </button>
+                <h3>Login</h3>
                 
                 </div>
             
@@ -117,16 +148,11 @@ if (data.email != "admin@gmail.com" && data.password!="admin") {
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
                   {/* Checkbox */}
-                  <div className="form-check mb-0">
-                    <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Example3" />
-                    <label className="form-check-label" htmlFor="form2Example3">
-                      Remember me
-                    </label>  
-                  </div>
-                  <Link to="#!" className="text-body">Forgot password?</Link>
+
+                  <Link  className="text-body" onClick={forgotPassword}>Forgot password?</Link>
                 </div>
                 <div className="text-center text-lg-start mt-4 pt-2">
-                  <button type="submit" className="btn btn-primary btn-lg" style={{paddingLeft: '2.5rem', paddingRight: '2.5rem',marginTop:'30px'}}>Login</button>
+                  <button type="submit" className="btn btn-primary btn-lg" style={{paddingLeft: '2.5rem', paddingRight: '2.5rem',marginTop:'30px'}}>Sign In</button>
                   <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <Link to="/registration" className="link-danger">Register</Link></p>
                 </div>
               </form>
