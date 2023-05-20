@@ -3,6 +3,7 @@ import { BrowserRouter , Routes , Route} from 'react-router-dom';
 import Home from './home/homepage';
 import Login from './login/login'
 import Project from './project/project'
+import Profile from './profile/profile'
 import Registration from './signup/signup'
 import Admin from './admin/admin'
 import About from './about/about';
@@ -18,6 +19,7 @@ const Rounting =()=>{
   <Route path="/" element={ <Home/>} />
   <Route path="/login" element={<Login/>} />
   <Route path="/project" element={<Project/>} />
+  <Route path="/profile" element={<Profile/>} />
   <Route path="/registration" element={<Registration/>} />
   <Route path="/about" element={<About/>} />
   <Route path="/approval" element={<Approval/>} />
