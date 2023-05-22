@@ -684,7 +684,7 @@ export default Profile;
 const ProjectCard = () => {
     const [user, setUser] = useState([]);
     const [normal,setnormal]=useState(true);
-    
+    const [approval,setapproval]=useState(true)
     const role = localStorage.getItem("role");
     const fetchData = () => {
       const userId=localStorage.getItem("userId");
@@ -705,7 +705,14 @@ const ProjectCard = () => {
           .then((response) => response.json())
           .then((data) =>{
             data=data.filter((e)=> e.guid== userId)
-            
+            data.filter((e)=>{
+              if(e.isapproved==="Approved"){
+                setapproval(false);
+              }else{
+                setapproval(true);
+              }
+             
+            })
             if(!data){
               data=data;
               setnormal(false);
@@ -970,7 +977,7 @@ fetch("http://localhost:8000/project/update/"+e, requestOptions)
  
 })
   }
-  const [approval,setapproval]=useState(true)
+
 function detailsApproval(e){
   var myHeaders = new Headers();
   myHeaders.append("Authorization", "token 2f6d6aea3a0c0e194747edb30de3fc427c111c22");
@@ -1191,7 +1198,17 @@ function detailsApproval(e){
                          Approval
                         </button>}
                         
-                               
+                        <Badge className="m-2" pill bg="secondary"
+             style={{
+                position:"absolute",
+                right:"0%",
+                top:"0"
+             }}
+             >  
+                     {userData.isapproval}
+                    </Badge>
+
+                          
                     
 
                         <button
