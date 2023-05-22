@@ -228,7 +228,7 @@ const navigate = useNavigate();
 
              
            >
-               <option selected>Select option</option>
+               <option selected>Select College</option>
              
              {college &&
                college.map((data) => (
@@ -252,7 +252,7 @@ const navigate = useNavigate();
 
              
            >
-               <option selected>Select option</option>
+               <option selected>Select University</option>
              
              {university &&
                university.map((data) => (
