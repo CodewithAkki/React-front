@@ -719,6 +719,44 @@ const ProjectCard = () => {
             } 
           console.log(data);
           setUser(data)});//.reverse())});
+        }else if(role=="Hod"){
+          return fetch("http://localhost:8000/project/")
+          .then((response) => response.json())
+          .then((data) =>{
+            data=data.filter((e)=> e.hod== userId)
+            data.filter((e)=>{
+              if(e.isapproval==="Approved"){
+                setappval(false)
+              }else{
+                setappval(true)
+              }
+             
+            })
+            if(!data){
+              data=data;
+              setnormal(false);
+            } 
+          console.log(data);
+          setUser(data)});//.reverse())});
+        }else if(role=="Dean"){
+          return fetch("http://localhost:8000/project/")
+          .then((response) => response.json())
+          .then((data) =>{
+            data=data.filter((e)=> e.dean== userId)
+            data.filter((e)=>{
+              if(e.isapproval==="Approved"){
+                setappval(false)
+              }else{
+                setappval(true)
+              }
+             
+            })
+            if(!data){
+              data=data;
+              setnormal(false);
+            } 
+          console.log(data);
+          setUser(data)});//.reverse())});
         }
     };
 
@@ -1121,7 +1159,7 @@ let approval=localStorage.getItem("Approval")
         </div>
       </div>
     );
-  }else{
+  }else if(role=="Guid"){
 
     return (
       
@@ -1241,5 +1279,111 @@ let approval=localStorage.getItem("Approval")
 
 
   }
+
+  else {
+
+    return (
+      
+      <div className="container">
+        <div className="row">
+  
+          {user &&
+            user.length > 0 &&
+            user.map((userData) => (
+             
+
+              <div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
+                <div
+                  className="card"
+                  style={{ width: "50rem",height:"90%", marginLeft: "150xp" }}
+                >
+                  <div className="card-body" >
+                   
+                    <p
+                      className="card-title mb-5 mt-3"
+                      style={{ marginLeft: "10px" }}
+                    >
+                                  <Badge className="m-2" pill bg="secondary"
+               style={{
+                  position:"absolute",
+                  right:"0%",
+                  
+               }}
+               >
+                        {userData.type}
+                      </Badge>
+                      <a
+                        href={userData.Storage_link}
+                        style={{ textDecoration: "none",fontSize:"1.4rem" }}
+            ><h3>{userData.name} </h3>
+                      </a>  
+                      <p style={{fontSize:"0.8rem"}}>End Date {userData.end_date}</p>
+                    <p>{userData.description}</p>
+                    </p>
+                    
+                  {normal&&<>  <button
+                          type="button"
+                          className="btn  mb-3"
+                          
+                          onClick={() => details(userData.id)}
+                          style={{
+                            width:"150px",
+                            marginTop:"-50px",
+                            marginLeft:"0px",
+                            background:"#808080",
+                            borderColor:"#808080",
+                            color:"white",
+                            fontWeight:"bold"
+                          }}
+                          
+                        >
+                          details
+                        </button>
+                  
+                        
+                        <Badge className="m-2" pill bg="secondary"
+             style={{
+                position:"absolute",
+                right:"0%",
+                top:"0"
+             }}
+             >  
+                     {approval=userData.isapproval}
+                    </Badge>
+
+                          
+                    
+
+                        <button
+                          type="button"
+                          className="btn  mb-3"
+                          
+                          onClick={() => message(userData.id,userData.message)}
+                          style={{
+                            width:"150px",
+                            marginTop:"-50px",
+                            marginLeft:"20px",
+                            background:"blue",
+                            borderColor:"#808080",
+                            color:"white",
+                            fontWeight:"bold"
+                          }}
+                          
+                        >
+                         Message
+                        </button>
+ </>}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+    );
+
+
+  }
+
+
   };
 
