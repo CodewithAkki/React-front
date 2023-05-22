@@ -98,6 +98,7 @@ if (data.email != "admin@gmail.com" && data.password!="admin") {
             localStorage.setItem("first_name",res.data.first_name);
             localStorage.setItem("last_name",res.data.last_name);
             localStorage.setItem("college",res.data.college);
+            localStorage.setItem("collegeId",res.data.collegeId);
             localStorage.setItem("state",res.data.address);
             localStorage.setItem("department",res.data.department);
             localStorage.setItem("university",res.data.university);

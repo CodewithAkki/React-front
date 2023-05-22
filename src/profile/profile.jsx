@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import Swal from 'sweetalert2'
 import NavbarComp from "../components/NavbarComp";
 import swal from "sweetalert";
@@ -9,11 +9,12 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import Badge from "react-bootstrap/Badge";
 import "bootstrap/dist/css/bootstrap.min.css";
 import uuid from "react-uuid";
-
+import { data } from "jquery";
+import './profile.css'
 
 function Profile() {
-
-
+  const reference = useRef();
+ 
     const picurl = "";
   const [progress, setProgress] = useState(0);
   const [patentInfo, setPatentInfo] = useState(false);
@@ -31,11 +32,13 @@ function Profile() {
     endDate: "",
     domain: "",
     type: "",
-    patent: "true",
     Patent_Info: "",
     Storage_link: "",
     guid: "",
-    leader:""
+    leader:"",
+    patentNo:"",
+    AcademicYear:"",
+    semester:""
   });
   {/**
 
@@ -159,25 +162,17 @@ const uploadfileUpdate = (file) => {
   }
 
 
-  function updateprofile(){
+  function updateprofile(email,contact_no,githublink){
     var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    
-    var raw = JSON.stringify({
-  "first_name": data_user.first_name,
-  "last_name": data_user.last_name,
-  "college": data_user.college,
-  "department": data_user.department,
-  "university": data_user.university,
-  "phone_no": data_user.contact_no,
-  "address": data_user.address,
-  "birthdate": data_user.birthdate,
-  "email": data_user.email,
-  "role": data_user.role
+myHeaders.append("Authorization", "token 2f6d6aea3a0c0e194747edb30de3fc427c111c22");
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "phone_no": contact_no ,
+  "email": email,
+  "githublink":githublink
 });
 
-
-    
 var requestOptions = {
   method: 'PATCH',
   headers: myHeaders,
@@ -185,21 +180,30 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://localhost:8000/users/update/"+userId, requestOptions)
+fetch("http://localhost:8000/users/update/1", requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
+  window.location.reload(false)
   }
 
   function handle(e) {
-    const newdata = { ...data };
+    const newdata = {...data};
     newdata[e.target.id] = e.target.value;
     setData(newdata);
     setPatentInfo(true);
     console.log("santosh", newdata);
   }
 
+  
+
   function editProfile(){
+    let githublink ="";
+     if(localStorage.getItem("githublink")==null){
+      githublink="Github Link";
+    }else{
+      githublink=localStorage.getItem("githublink");
+    }
 {/**
 Name :   Somesh Kamble
 
@@ -216,48 +220,33 @@ State :   Maharashtra
 email :   someshkamble@gmail.com
 
 */}
+
+
+
+   
     Swal.fire({
       title: 'user Form',
-      html: `
-      
-      <input type="text" id="first_name" class="swal2-input" value=`+first_name+` placeholder="First_Name" style="width:400px;">
-      <input type="text" id="last_name" class="swal2-input" value=`+last_name+` placeholder="Last_Name" style="width:400px;">
-      <input type="text" id="department" class="swal2-input" value=`+department+` placeholder="Department" style="width:400px">
+      html: `      
       <input type="text" id="contact_no" class="swal2-input" value=`+contact_no+` placeholder="contact no" style="width:400px">
-      <input type="text" id="role" class="swal2-input"  value=`+role+` placeholder="Role" style="width:400px">
-      <input type="text" id="university" class="swal2-input" value=`+university+` placeholder="University" style="width:400px">
-      <input type="text" id="college" class="swal2-input" value=`+college+` placeholder="college" style="width:400px">
-      <input type="text" id="state" class="swal2-input" value=`+state+` placeholder="State" style="width:400px">
       <input type="text" id="email" class="swal2-input" value=`+email+` placeholder="email" style="width:400px">
-      
+      <input type="text" id="githublink" class="swal2-input" value=`+githublink+` placeholder="email" style="width:400px">
       `,
       customClass: 'swal-wide',
       confirmButtonText: 'Edit',
       focusConfirm: false,
       preConfirm: () => {
-        const first_name = Swal.getPopup().querySelector('#first_name').value
-        const last_name = Swal.getPopup().querySelector('#last_name').value
-        const department = Swal.getPopup().querySelector('#department').value
-        const role = Swal.getPopup().querySelector('#role').value
         const contact_no = Swal.getPopup().querySelector('#contact_no').value
-        const university = Swal.getPopup().querySelector('#university').value
-        const college = Swal.getPopup().querySelector('#college').value
-        const state = Swal.getPopup().querySelector('#state').value
         const email = Swal.getPopup().querySelector('#email').value
-        if (!last_name||!first_name || !department || !role || !university || !college || !state || !email ) {
-          Swal.showValidationMessage(`Please enter login and password`)
+        const githublink = Swal.getPopup().querySelector('#githublink').value
+
+        if (!contact_no|| !email ||!githublink) {
+          Swal.showValidationMessage(`Please enter email or contact or githublink`)
         }
         return { 
-                 first_name: first_name, 
-                 last_name: last_name, 
-                 department: department,
-                 role:role,
-                 university:university,
-                 college:college,
-                 state:state,
                  email:email,
-                 contact_no:contact_no
-                }
+                 contact_no:contact_no,
+                 githublink:githublink
+               }
       }
     }).then((result) => {
 
@@ -272,67 +261,16 @@ email :   someshkamble@gmail.com
     department:"",
     university:""
     */}
-      const file =result.value.profilepic
-      
-      
-      setData_user({...data_user,first_name:result.value.first_name});
-      setData_user({...data_user,last_name:result.value.last_name});
-      setData_user({...data_user,email:result.value.email});
-      setData_user({...data_user,college:result.value.college});
-      setData_user({...data_user,contact_no:result.value.contact_no});
-      setData_user({...data_user,role:result.value.role});
-      setData_user({...data_user,address:result.value.address});
-      setData_user({...data_user,department:result.value.department});
-      setData_user({...data_user,university:result.value.university});
-
-      updateprofile();
-
-
+   
+      localStorage.setItem("email",result.value.email);
+      localStorage.setItem("contact_no",result.value.contact_no);
+      localStorage.setItem("githublink",result.value.githublink);
+      updateprofile(result.value.email,result.value.contact_no ,result.value.githublink );
     })
 
   }
 
-function profilechange(){
-  Swal.fire({
-    title: 'Change Image',
-    html: `
-    <input type="file" name="choose image" id="profile"/>
 
-    `,
-    customClass: 'swal-wide',
-    confirmButtonText: 'Edit',
-    focusConfirm: false,
-    preConfirm: () => {
-      const profilepic = Swal.getPopup().querySelector('#profile').value
-
-      if (!profilepic ) {
-        Swal.showValidationMessage(`Please enter login and password`)
-      }
-      return { 
-        profilepic:profilepic
-              }
-    }
-  }).then((result) => {
-
-    {/*
-         first_name: "",
-  last_name: "",
-  email: "",
-  college:"",
-  contact_no: "",
-  role:"",
-  address:"",
-  department:"",
-  university:""
-  */}
-    const file =result.value.profilepic
-
-    uploadfileUpdate(file);
-
-
-  })
-
-}
 
   const handleShow = () => {
     setShow(true);
@@ -372,9 +310,11 @@ function profilechange(){
     fetchAssigned();
     fetchguid();
   }, []);
+
   console.log(data);
+
   function submit (downloadURL){
-    
+    const userId = localStorage.getItem("userId")
    
     axios
     .post(url, {
@@ -386,7 +326,12 @@ function profilechange(){
       domain: data.domain,
       is_patent: data.patent,
       patent_info: data.Patent_Info,
-      leader:userId
+      leader:userId,
+      AcademicYear:data.AcademicYear,
+      patentNo:data.patentNo ,
+      semester: data.semester,
+      guid:data.guid
+
     }).then((res) => {
       
       swal({
@@ -417,12 +362,12 @@ const [guids,setguids]=useState([]);
 
 
 const fetchguid = () => {
-    const userId=localStorage.getItem("userId")
+    const collegeId=localStorage.getItem("collegeId")
    
     return fetch("http://localhost:8000/users/")
       .then((response) => response.json())
       .then((data) =>{
-        data=data.filter((e)=>e.college===college && e.role===2)
+        data=data.filter((e)=>e.college==collegeId && e.role==2)
       console.log(data);
       setguids(data)});//.reverse())});
   
@@ -430,6 +375,8 @@ const fetchguid = () => {
   const selectguid = (e)=>{
     setData({...data,guid:e});
   }
+  let githublink =localStorage.getItem("githublink");
+  const roles = localStorage.getItem("role");
 return (
     
     <div>
@@ -440,7 +387,7 @@ return (
           style={{
             width:"400px",
             border:"1px solid #000000",
-            height:"85%",
+            height:"1000px",
             position:"absolute"
           }}
           >
@@ -461,14 +408,20 @@ return (
                           }}
                           accept="image/x-png,image/gif,image/jpeg" 
                         />
-                <button className="btn btn-primary" onClick={uploadfileUpdate}>Edit Profile</button>
+                <button className="btn btn-primary" onClick={uploadfileUpdate}
+                style={{
+                  marginLeft:"50px",
+                }}
+                >Edit Profile</button>
                 <p style={{marginTop:"50px",marginLeft:"40px"}}>Name :&nbsp; &nbsp;{first_name+" "+last_name}</p>
-                <p style={{marginTop:"5px",marginLeft:" 0px"}}>department :&nbsp; &nbsp;{department}</p>
+                <p style={{marginTop:"5px",marginLeft:" 0px"}}>Department :&nbsp; &nbsp;{department}</p>
                 <p style={{marginTop:"0px",marginLeft:"45px"}}>Role :&nbsp; &nbsp;{role}</p>
                 <p style={{marginTop:"5px",marginLeft:"5px"}}>University :&nbsp; &nbsp;{university}</p>
-                <p style={{marginTop:"5px",marginLeft:"25px"}}>college :&nbsp; &nbsp;{college}</p>
+                <p style={{marginTop:"5px",marginLeft:"25px"}}>College :&nbsp; &nbsp;{college}</p>
                 <p style={{marginTop:"5px",marginLeft:"40px"}}>State :&nbsp; &nbsp;{state}</p>
-                <p style={{marginTop:"5px",marginLeft:"40px"}}>email :&nbsp; &nbsp;{email} </p>
+                <p style={{marginTop:"5px",marginLeft:"40px"}}>Email :&nbsp; &nbsp;{email} </p>
+                <p style={{marginTop:"5px",marginLeft:"20px"}}>Contact :&nbsp; &nbsp;{contact_no} </p>
+                <p style={{marginTop:"5px",marginLeft:"20px"}}>Github Link :&nbsp; &nbsp;{githublink} </p>
                 {/*<input
                           type="file"
                           id="projectName"
@@ -497,7 +450,7 @@ return (
            
         
           <div className="col-sm-0">
-          {newBtnShow &&  <button
+          {newBtnShow && roles == "Student"&&  <button
               style={{
                 width: "10%",
                 float: "right",
@@ -510,7 +463,7 @@ return (
             >
               + &nbsp; &nbsp;New Project
             </button>}
-            {newBtnShow1 &&  <button
+            {newBtnShow1 && roles == "Student" &&  <button
               style={{
                 width: "10%",
                 float: "right",
@@ -542,25 +495,39 @@ return (
                           className="form-control form-control-lg"
                         />
                       </div>
-                      <div className="form-outline mb-4">
-                   
-                      </div>
-                   
-                     
-                        <div className="form-outline mb-4">
-                          <input
-                            type="text"
+                      <div className="form-outline mb-4" style={{display:"flex"}}>
+                        <input
+                          type="text"
+                          id="patentNo"
+                          value={data.patentNo}
+                          onChange={(e) => handle(e)}
+                          placeholder="Patent No"
+                          className="form-control form-control-lg"
+                          style={{
+                            height:"20px",
+                            width:"200px"
+                          }}
+                        />
+                         <textarea
+                           rows="4" 
+                           cols="50"
                             onChange={(e) => handle(e)}
                             id="Patent_Info"
                             value={data.Patent_Info}
                             placeholder="Patent Info"
                             className="form-control form-control-lg"
+                            style={{
+                              marginLeft:"20px"
+                            }}
                           />
-                        </div>
+                      </div>
+                       
+
                      
                       <div className="form-outline mb-4">
-                        <input
-                          type="text"
+                        <textarea
+                           rows="4" 
+                           cols="50"
                           onChange={(e) => handle(e)}
                           id="description"
                           value={data.description}
@@ -568,14 +535,63 @@ return (
                           className="form-control form-control-lg"
                         />
                       </div>
-                      <div className="form-outline mb-4">
+                      <div className="form-outline mb-4" style={{display:"flex"}}>
+                        <label for="endDate">END DATE</label>
                         <input
-                          type="date"
+                          type="date" 
                           onChange={(e) => handle(e)}
                           id="endDate"
                           value={data.endDate}
                           className="form-control form-control-lg"
+                          style={{
+                            width:"200px",
+                            marginTop:"30px",
+                            marginLeft:"-80px"
+                          }}
                         />
+                           <label  style={{marginLeft:"10px"}}>Academic Year</label>
+                        <input
+                          type="text" 
+                          onChange={(e) => handle(e)}
+                          id="AcademicYear"
+                          value={data.AcademicYear}
+                          className="form-control form-control-lg"
+                          style={{
+                            width:"200px",
+                            marginTop:"30px",
+                            marginLeft:"-110px"
+                          }}
+                        />
+
+                        <select   
+                            onChange={(e) => handle(e)}
+                            className="form-select"
+                            aria-label="Default select example"
+                            id="semester"
+                            value={data.semester}
+                            style={{
+                              width:"200px",
+                              height:"50px",
+                              marginLeft:"10px",
+                              marginTop:"30px"
+                            }}
+                          >{/*
+                          
+                          1 = I	2 = II	3 = III	4 = IV	5 = V
+6 = VI	7 = VII	8 = VIII
+
+                          */}
+                             <option selected>Select semester</option>
+                            <option value="I">I</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                            <option value='IV'>IV</option>
+                            <option value='V'>V</option>
+                            <option value='VI'>VI</option>
+                            <option value='VII'>VII</option>
+                            <option value='VIII'>VIII</option>
+                          </select>
+
                       </div>
                       <div className="form-outline mb-4">
                         <select
@@ -584,7 +600,7 @@ return (
                           onChange={(e) => handle(e)}
                           id="domain"
                         >
-                          <option selected>Select option</option>
+                          <option selected>Select Domain</option>
                           {user &&
                             user.map((data) => (
                               <option value={data.id}>{data.name}</option>
@@ -601,7 +617,7 @@ return (
   
                             
                           >
-                              <option selected>Select option</option>
+                              <option selected>Select Guid</option>
                             
                             {guids &&
                               guids.map((data) => (
@@ -617,6 +633,9 @@ return (
                           id="type"
                           value="Public"
                           name="repoType"
+                          style={{
+                              marginTop:"20px"
+                          }}  
                         />{" "}
                         Public
                         <input
@@ -665,80 +684,88 @@ export default Profile;
 const ProjectCard = () => {
     const [user, setUser] = useState([]);
     const [normal,setnormal]=useState(true);
+    
+    const role = localStorage.getItem("role");
     const fetchData = () => {
       const userId=localStorage.getItem("userId");
-  
+     
+      if(role=="Student"){
       return fetch("http://localhost:8000/project/")
         .then((response) => response.json())
         .then((data) =>{
-          data=data.filter((e)=>e.type==="Public" || (e.type==userId && e.type==="Private"))
+          data=data.filter((e)=> e.leader==userId )
           if(!data){
             data=data;
             setnormal(false);
           } 
         console.log(data);
         setUser(data)});//.reverse())});
-    
-    };
-    const details = (e) => {
-  console.log(e);
-    Swal.fire({
-      title: 'project Form',
-      html: `
-  
-      <input type="text" id="projectName" class="swal2-input" placeholder="projectName">
-      <input type="text" id="description" class="swal2-input" placeholder="description">
-      <input type="date" id="endDate" class="swal2-input" placeholder="endDate"></br>
-      <input type="radio" id="type" value="Public" name="repoType"/>Public</br>
-      <input type="radio" id="type" value="Private" name="repoType"/>Private</br>
-      <input type="text" id="Patent_Info" class="swal2-input" placeholder="Patent_Info">
-      
-      <input type="file" id="login" class="swal2-input" placeholder="choose Project">
-     
-      `,
-      confirmButtonText: 'Sign in',
-      focusConfirm: false,
-      preConfirm: () => {
-        const projectName = Swal.getPopup().querySelector('#projectName').value
-        const endDate = Swal.getPopup().querySelector('#endDate').value
-        const type = Swal.getPopup().querySelector('#type').value
-        const Patent_Info = Swal.getPopup().querySelector('#Patent_Info').value
-        const description = Swal.getPopup().querySelector('#description').value
-        if (!projectName || !endDate ||!Patent_Info  ||!description ||!type  ) {
-          Swal.showValidationMessage(`Please enter login and password`)
+        }else if(role=="Guid"){
+          return fetch("http://localhost:8000/project/")
+          .then((response) => response.json())
+          .then((data) =>{
+            data=data.filter((e)=> e.guid== userId)
+            
+            if(!data){
+              data=data;
+              setnormal(false);
+            } 
+          console.log(data);
+          setUser(data)});//.reverse())});
         }
-        return { projectName: projectName, endDate: endDate,Patent_Info:Patent_Info, description:description,type:type}
-      }
-    }).then((result) => {
+    };
+
+  const [dataProject,set]=useState([]);
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+const details = (id) => {
+
+
+      fetch("http://localhost:8000/project/project/"+id+"/")
+        .then((response) => response.json())
+        .then((data) =>{
+        console.log(data);
+        set(data)});
+
+console.log(dataProject);
+if(dataProject.name!=undefined){
+if(dataProject){
+  sleep(200000);
+  Swal.fire({
+    title: '<strong><u>Project Details</u></strong>',
+    icon: 'info',
+    html:
+      `
+      <p><b>Project Name :</b>`+dataProject.name+` </p>
+      <p><b>Patent No :</b>`+dataProject.patentNo+`</p>
+      <p><b>Patent Info :</b>`+dataProject.patent_info+`</p>
+      <p><b>Description :</b>`+dataProject.description+`</p>
+      <p><b>End Date :</b>`+dataProject.end_date+`</p>
+      <p><b>Domain :</b>`+dataProject.domain+`</p>
+      <p><b>Type of project :</b>`+dataProject.type+`</p>
+      <p><b>Academic Year :</b>`+dataProject.AcademicYear+`</p>
+      <p><b>Department:</b>`+dataProject.department+`</p>
+      <p><b>Semister :</b>`+dataProject.semester+`</p>
+      <p><b>Guid :</b>`+dataProject.guid+`</p>
+      <p><b>Leader :</b>`+dataProject.leader+`</p>
+      <p><b>group members :</b></p> 
+
+      `,
+    showCloseButton: true,
    
-      var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
+    focusConfirm: false,
+    confirmButtonText:
+      '<i class="fa fa-thumbs-up"></i> Great!',
+    confirmButtonAriaLabel: 'Thumbs up, great!',
+   
+    
+  })
+}
+}
   
-  var raw = JSON.stringify({
-    "name": result.value.projectName,
-    "is_patent": true,
-    "patent_info": result.value.Patent_Info,
-    "end_date": result.value.endDate,
-    "type": result.value.type,
-    "description": result.value.description,
-  });
-  
-  var requestOptions = {
-    method: 'PATCH',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-  };
-  
-  fetch("http://localhost:8000/project/"+e+"/", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
-  
-    })
-  
-  
-  }
+}
+
   const [Groups,setGroups]=useState([]);
   const fetchDataGroup = (e) => {
   return fetch("http://localhost:8000/project/Group/"+e)
@@ -855,7 +882,6 @@ const ProjectCard = () => {
     useEffect(() => {
       fetchData();
       fetchguid();
-  
     }, []);
   
   function projectguidUpdate(){
@@ -894,8 +920,91 @@ const ProjectCard = () => {
       projectguidUpdate()
       window.location.reload(false)
       }
+  function message(e,message){
+    console.log("Message:",e);
+    Swal.fire({
+  title: 'Message',
+  html: `<textArea id="login" class="swal2-input" placeholder="Message" cols="20" rows="10"   style="height=1000px;">`+message+`</textArea>
+  `,
+  customClass: 'swal-wide',
+  confirmButtonText: 'Send',
+  focusConfirm: false,
+  preConfirm: () => {
+    const login = Swal.getPopup().querySelector('#login').value
+    if (!login ) {
+      Swal.showValidationMessage(`Please enter login and password`)
+    }
+    return { login: login }
+  }
+}).then((result) => {
+
+  var myHeaders = new Headers();
+myHeaders.append("Authorization", "token 2f6d6aea3a0c0e194747edb30de3fc427c111c22");
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "message": result.value.login
+});
+
+var requestOptions = {
+  method: 'PATCH',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("http://localhost:8000/project/update/"+e, requestOptions)
+  .then(response => response.text())
+  .then(result => {
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Your work has been saved',
+      showConfirmButton: false,
+      timer: 1500
+    })
+  })
+  .catch(error => console.log('error', error));
+
+
+ 
+})
+  }
+  const [approval,setapproval]=useState(true)
+function detailsApproval(e){
+  var myHeaders = new Headers();
+  myHeaders.append("Authorization", "token 2f6d6aea3a0c0e194747edb30de3fc427c111c22");
+  myHeaders.append("Content-Type", "application/json");
   
+  var raw = JSON.stringify({
+    "isapproval": "Approved"
+  });
   
+  var requestOptions = {
+    method: 'PATCH',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  
+  fetch("http://localhost:8000/project/updateprojectdata/"+e+"/", requestOptions)
+    .then(response => response.text())
+    .then(result => {
+
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Your work has been saved',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      setapproval(false);
+    })
+    .catch(error => console.log('error', error));
+
+}
+
+  if(role=="Student"){
     return (
       
       <div className="container">
@@ -910,16 +1019,13 @@ const ProjectCard = () => {
                   className="card"
                   style={{ width: "50rem",height:"90%", marginLeft: "150xp" }}
                 >
-                  <div className="card-body">
+                  <div className="card-body" >
+                   
                     <p
                       className="card-title mb-5 mt-3"
                       style={{ marginLeft: "10px" }}
                     >
-                      <a
-                        href={userData.Storage_link}
-                        style={{ textDecoration: "none",fontSize:"1.4rem" }}
-            >
-               <Badge className="m-2" pill bg="secondary"
+                                  <Badge className="m-2" pill bg="secondary"
                style={{
                   position:"absolute",
                   right:"0%",
@@ -928,12 +1034,12 @@ const ProjectCard = () => {
                >
                         {userData.type}
                       </Badge>
-          
-  
-                        <h3>{userData.name} </h3>
-                      </a>     
-                   
-                      <p style={{fontSize:"0.8rem"}}>Updated on {userData.end_date}</p>
+                      <a
+                        href={userData.Storage_link}
+                        style={{ textDecoration: "none",fontSize:"1.4rem" }}
+            ><h3>{userData.name} </h3>
+                      </a>  
+                      <p style={{fontSize:"0.8rem"}}>End Date {userData.end_date}</p>
                     <p>{userData.description}</p>
                     </p>
                     
@@ -972,26 +1078,33 @@ const ProjectCard = () => {
                          
                         >
                           delete
-                        </button></>}
-
+                        </button>
+                        
                         <button
                           type="button"
                           className="btn  mb-3"
-                          onClick={() => createGroup(userData.id)}
-  
+                          
+                          onClick={() => message(userData.id,userData.message)}
                           style={{
                             width:"150px",
                             marginTop:"-50px",
-                            marginLeft:"25px",
-                            background:"black",
-                            borderColor:"black",
+                            marginLeft:"20px",
+                            background:"blue",
+                            borderColor:"#808080",
                             color:"white",
                             fontWeight:"bold"
                           }}
-                         
+                          
                         >
-                          create Group
+                         Message
                         </button>
+
+
+                        
+                        </>}
+
+
+                 
   
   
                   </div>
@@ -1001,5 +1114,117 @@ const ProjectCard = () => {
         </div>
       </div>
     );
+  }else{
+
+    return (
+      
+      <div className="container">
+        <div className="row">
+  
+          {user &&
+            user.length > 0 &&
+            user.map((userData) => (
+              
+              <div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
+                <div
+                  className="card"
+                  style={{ width: "50rem",height:"90%", marginLeft: "150xp" }}
+                >
+                  <div className="card-body" >
+                   
+                    <p
+                      className="card-title mb-5 mt-3"
+                      style={{ marginLeft: "10px" }}
+                    >
+                                  <Badge className="m-2" pill bg="secondary"
+               style={{
+                  position:"absolute",
+                  right:"0%",
+                  
+               }}
+               >
+                        {userData.type}
+                      </Badge>
+                      <a
+                        href={userData.Storage_link}
+                        style={{ textDecoration: "none",fontSize:"1.4rem" }}
+            ><h3>{userData.name} </h3>
+                      </a>  
+                      <p style={{fontSize:"0.8rem"}}>End Date {userData.end_date}</p>
+                    <p>{userData.description}</p>
+                    </p>
+                    
+                  {normal&&<>  <button
+                          type="button"
+                          className="btn  mb-3"
+                          
+                          onClick={() => details(userData.id)}
+                          style={{
+                            width:"150px",
+                            marginTop:"-50px",
+                            marginLeft:"0px",
+                            background:"#808080",
+                            borderColor:"#808080",
+                            color:"white",
+                            fontWeight:"bold"
+                          }}
+                          
+                        >
+                          details
+                        </button>
+                       {approval&& <button
+                          type="button"
+                          className="btn  mb-3"
+                          
+                          onClick={() => detailsApproval(userData.id)}
+                          style={{
+                            width:"150px",
+                            marginTop:"-50px",
+                            marginLeft:"20px",
+                            background:"red",
+                            borderColor:"#808080",
+                            color:"white",
+                            fontWeight:"bold"
+                          }}
+                          
+                        >
+                         Approval
+                        </button>}
+                        
+                               
+                    
+
+                        <button
+                          type="button"
+                          className="btn  mb-3"
+                          
+                          onClick={() => message(userData.id,userData.message)}
+                          style={{
+                            width:"150px",
+                            marginTop:"-50px",
+                            marginLeft:"20px",
+                            background:"blue",
+                            borderColor:"#808080",
+                            color:"white",
+                            fontWeight:"bold"
+                          }}
+                          
+                        >
+                         Message
+                        </button>
+
+
+
+ </>}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+    );
+
+
+  }
   };
 

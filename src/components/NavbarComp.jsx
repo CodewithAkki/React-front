@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 
 
 const Navbar=(props)=> {
-    const user=localStorage.getItem("email");
+    const user=localStorage.getItem("first_name");
+    console.log(user);
     const {state,dispatch}=useContext(UserContext);
         const handleLogout=()=>{
             localStorage.clear();
@@ -60,10 +61,10 @@ const Navbar=(props)=> {
           <li className="nav-item">
 <Link className="nav-link " aria-current="page" to="/">Home</Link>
 </li>
-<li className="nav-item"> <Link className="nav-link" to="/project">Project</Link>
-         </li>
 <li className="nav-item">
-<Link className="nav-link" to="/approval">Approval</Link>
+<Link className="nav-link" to="/Profile">Profile</Link>
+</li>
+<li className="nav-item"> <Link className="nav-link" to="/project">Project</Link>
 </li>
 <li className="nav-item">
 <Link className="nav-link" to="/event">Events</Link>
