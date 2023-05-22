@@ -17,7 +17,10 @@ function Support() {
     role:"",
     address:"",
     department:"",
-    university:""
+    university:"",
+    designation:"",
+    education:"",
+    experience:""
   });
   console.log(data)
 const [college,setcollege]=useState([]);
@@ -104,8 +107,9 @@ const navigate = useNavigate();
 
 
   const handleChange = (e) => {
-    setValue(e.target.value);
+    setValue(e);
     console.log(value);
+    selectBox(e);
   };
 
   function submit(downloadURL) {
@@ -147,6 +151,15 @@ const navigate = useNavigate();
         }
       });
   }
+  const [values,setvalues]=useState(false);
+  const selectBox=(value)=>{
+    console.log("value:",value);
+      if(value==1){
+        setvalues(false)
+      }else if(value==2||value==3||value==4){
+        setvalues(true)
+      }
+  }
   return (
     <div>
       <div>
@@ -179,7 +192,9 @@ const navigate = useNavigate();
                         {/* 2 column grid layout with text inputs for the first and last names */}
                         <div className="row">
                           <div className="col-md-6 mb-4">
+                            
                             <div className="form-outline">
+
                               <input
                                 type="text"
                                 onChange={(e) => handle(e)}
@@ -203,6 +218,25 @@ const navigate = useNavigate();
                             </div>
                           </div>
                         </div>
+                                                 {/* Select */}
+                                                 <div className="form-ouline mb-4">
+                          <select
+                            className="form-select"
+                            aria-label="Default select example"
+                            onChange={(e)=>handleChange(e.target.value)}
+                            id="option"
+                            value={data.option}
+                            //onClick={(e)=>selectBox(e.target.value)}
+                          >
+                             <option selected>Select Type</option>
+                            <option value="1">Student</option>
+                            <option value="2">Guide</option>
+                            <option value="3">HOD</option>
+                            <option value='4'>Dean</option>
+                          
+                          </select>
+                        </div>
+                        {/* Checkbox */}
                         {/* Email input */}
                         <div className="form-outline mb-4">
                           <input
@@ -304,11 +338,48 @@ const navigate = useNavigate();
                             className="form-control"
                           />
                         </div>
-
+                        {values&&
                         <div className="form-outline mb-4">
                         <input
+                            type="text"
+                            onChange={(e) => handle(e)}
+                            value={data.designation}
+                            id="designation"
+                            placeholder="Designation"
+                            className="form-control"
+
+                          />
+                          <input
+                            type="text"
+                            onChange={(e) => handle(e)}
+                            value={data.experience}
+                            id="experience"
+                            placeholder="Experience"
+                            className="form-control"
+                            style={{
+                              marginTop:"20px"
+                            }}
+                          />
+                        <input
+                            type="text"
+                            onChange={(e) => handle(e)}
+                            value={data.education}
+                            id="education"
+                            placeholder="Education"
+                            className="form-control"
+                            style={{
+                              marginTop:"20px"
+                            }}
+                          />
+                        </div>
+                        
+
+                       }
+                        <div className="form-outline mb-4">
+                          <label for="profile">select Profile</label>
+                        <input
                           type="file"
-                          id="projectName"
+                          id="profile"
                           placeholder="projectName"
                           className="form-control form-control-lg"
                           onChange={(event) => {
@@ -318,26 +389,6 @@ const navigate = useNavigate();
                         />
                       </div>
 
-                         {/* Select */}
-                         <div className="form-ouline mb-4">
-                          <select
-                            className="form-select"
-                            aria-label="Default select example"
-                            onChange={handleChange}
-                            id="option"
-                            value={data.option}
-                          >
-                             <option selected>Select option</option>
-                            <option value="1">Student</option>
-                            <option value="2">Guide</option>
-                            <option value="3">HOD</option>
-                            <option value='4'>Dean</option>
-                          
-                          </select>
-                        </div>
-                        {/* Checkbox */}
-
-                       
                         {/* Submit button */}
                         <button
                           type="button"
