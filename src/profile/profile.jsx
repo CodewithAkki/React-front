@@ -684,7 +684,7 @@ export default Profile;
 const ProjectCard = () => {
     const [user, setUser] = useState([]);
     const [normal,setnormal]=useState(true);
-    const [approval,setapproval]=useState(true)
+    const [appval,setappval]=useState(true);
     const role = localStorage.getItem("role");
     const fetchData = () => {
       const userId=localStorage.getItem("userId");
@@ -706,10 +706,10 @@ const ProjectCard = () => {
           .then((data) =>{
             data=data.filter((e)=> e.guid== userId)
             data.filter((e)=>{
-              if(e.isapproved==="Approved"){
-                setapproval(false);
+              if(e.isapproval==="Approved"){
+                setappval(false)
               }else{
-                setapproval(true);
+                setappval(true)
               }
              
             })
@@ -1005,12 +1005,12 @@ function detailsApproval(e){
         showConfirmButton: false,
         timer: 1500
       })
-      setapproval(false);
+      localStorage.setItem("Approval","false")
     })
     .catch(error => console.log('error', error));
 
 }
-
+let approval=localStorage.getItem("Approval")
   if(role=="Student"){
     return (
       
@@ -1131,7 +1131,8 @@ function detailsApproval(e){
           {user &&
             user.length > 0 &&
             user.map((userData) => (
-              
+             
+
               <div className="col-6 mt-5 ml-5" style={{ marginLeft: "350px" }}>
                 <div
                   className="card"
@@ -1179,7 +1180,7 @@ function detailsApproval(e){
                         >
                           details
                         </button>
-                       {approval&& <button
+                       {appval&& <button
                           type="button"
                           className="btn  mb-3"
                           
@@ -1205,7 +1206,7 @@ function detailsApproval(e){
                 top:"0"
              }}
              >  
-                     {userData.isapproval}
+                     {approval=userData.isapproval}
                     </Badge>
 
                           
@@ -1229,9 +1230,6 @@ function detailsApproval(e){
                         >
                          Message
                         </button>
-
-
-
  </>}
                   </div>
                 </div>
